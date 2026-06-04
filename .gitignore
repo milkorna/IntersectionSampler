@@ -1,5 +1,6 @@
 build/
 .vscode/
+.vs/
 
 intersection_points.txt
 plane_points.txt

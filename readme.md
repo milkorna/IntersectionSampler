@@ -55,21 +55,21 @@ cmake --build build
 Например, из папки `build`:
 
 ```bash
-./IntersectionSampler ../data.txt ../out
+./IntersectionSampler ../data.txt ../result
 ```
 
 После запуска в указанной папке будут созданы выходные файлы:
 
 ```txt
-out/plane_points.txt
-out/intersection_points.txt
-out/shape_cone_points.txt
+result/plane_points.txt
+result/intersection_points.txt
+result/shape_cone_points.txt
 ```
 
 или для цилиндра:
 
 ```txt
-out/shape_cylinder_points.txt
+result/shape_cylinder_points.txt
 ```
 
 ## Запуск в Visual Studio
@@ -80,16 +80,20 @@ out/shape_cylinder_points.txt
 File → Open → Folder...
 ```
 
+Нужно выбрать корневую папку проекта, где находится `CMakeLists.txt`.
+
 После открытия Visual Studio должна автоматически сконфигурировать CMake-проект. Для сборки можно использовать:
 
 ```txt
 Build → Build All
 ```
 
+или выбрать target `IntersectionSampler.exe` и собрать его отдельно.
+
 Для запуска программы нужно указать аргументы командной строки:
 
 ```txt
-data.txt out
+data.txt result
 ```
 
 То есть первый аргумент — путь к входному файлу, второй аргумент — папка для сохранения выходных `.txt` файлов.
@@ -106,12 +110,17 @@ data.txt out
       "project": "CMakeLists.txt",
       "projectTarget": "IntersectionSampler.exe",
       "name": "IntersectionSampler",
-      "args": ["data.txt", "out"],
+      "args": [
+        "data.txt",
+        "result"
+      ],
       "currentDir": "${workspaceRoot}"
     }
   ]
 }
 ```
+
+При запуске через Visual Studio важно выбрать именно launch-конфигурацию `IntersectionSampler`, чтобы аргументы `data.txt` и `result` были переданы программе.
 
 ## Визуализация
 
@@ -127,18 +136,18 @@ pip install plotly
 
 ```bash
 python3 plot_debug_scene.py \
-  --shape out/shape_cone_points.txt \
-  --plane out/plane_points.txt \
-  --intersection out/intersection_points.txt
+  --shape result/shape_cone_points.txt \
+  --plane result/plane_points.txt \
+  --intersection result/intersection_points.txt
 ```
 
 Для цилиндра:
 
 ```bash
 python3 plot_debug_scene.py \
-  --shape out/shape_cylinder_points.txt \
-  --plane out/plane_points.txt \
-  --intersection out/intersection_points.txt
+  --shape result/shape_cylinder_points.txt \
+  --plane result/plane_points.txt \
+  --intersection result/intersection_points.txt
 ```
 
 Скрипт создаёт HTML-файл `debug_scene.html`, который можно открыть в браузере. В нём отображаются четыре 3D-сцены:
