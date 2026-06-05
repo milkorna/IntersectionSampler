@@ -15,10 +15,6 @@
 
 namespace {
 
-constexpr std::size_t IntersectionPointCount = 100;
-constexpr std::size_t BasePointCount = 47;
-constexpr std::size_t PlaneGridSize = 9;
-
 std::string shapeTypeToString(const ShapeType type) {
   switch (type) {
   case ShapeType::Cylinder:
@@ -82,7 +78,7 @@ int main(int argc, char *argv[]) {
     const Plane plane(data.plane);
 
     const PlanePointSampler planeSampler(plane);
-    const PlaneSample planeSample = planeSampler.sample(PlaneGridSize);
+    const PlaneSample planeSample = planeSampler.sample();
 
     const auto planeOutputFile = outputDir / "plane_points.txt";
 
@@ -93,7 +89,7 @@ int main(int argc, char *argv[]) {
       const Cone cone(data.shape);
 
       const ConePointSampler shapeSampler(cone);
-      const ConeSample coneSample = shapeSampler.sample(BasePointCount);
+      const ConeSample coneSample = shapeSampler.sample();
 
       const auto outputFile = outputDir / "shape_cone_points.txt";
 
@@ -104,7 +100,7 @@ int main(int argc, char *argv[]) {
       const Cylinder cylinder(data.shape);
 
       const CylinderPointSampler shapeSampler(cylinder);
-      const CylinderSample cylinderSample = shapeSampler.sample(BasePointCount);
+      const CylinderSample cylinderSample = shapeSampler.sample();
 
       const auto outputFile = outputDir / "shape_cylinder_points.txt";
 
@@ -116,13 +112,12 @@ int main(int argc, char *argv[]) {
     const IntersectionPointSampler intersectionSampler(
         IntersectionPointSamplerFactory::create(plane, data.shape));
 
-    const auto intersectionPoints =
-        intersectionSampler.sample(IntersectionPointCount);
+    const auto intersectionPoints = intersectionSampler.sample();
 
     const auto intersectionOutputFile = outputDir / "intersection_points.txt";
 
-    DataWriter::writePoints(intersectionOutputFile.string(),
-                            intersectionPoints);
+    DataWriter::writeIntersectionPoints(intersectionOutputFile.string(),
+                                        intersectionPoints);
 
     std::cout << "\nOutput files directory: " << outputDir << '\n';
     std::cout << "Intersection points sample count: "

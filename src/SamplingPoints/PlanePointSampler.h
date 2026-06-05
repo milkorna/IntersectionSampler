@@ -15,8 +15,10 @@ class PlanePointSampler {
 public:
   explicit PlanePointSampler(const Plane &plane);
 
-  PlaneSample sample(size_t gridSize) const;
+  PlaneSample sample() const;
 
 private:
   Plane m_plane;
+
+  static constexpr std::size_t m_gridSize = 9;
 };

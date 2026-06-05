@@ -25,13 +25,13 @@ template <typename Shape> struct ShapeSampleTraits;
 template <> struct ShapeSampleTraits<Cylinder> {
   using Sample = CylinderSample;
 
-  static Sample sample(const Cylinder &cylinder, std::size_t pointCount);
+  static CylinderSample sample(const Cylinder &cylinder);
 };
 
 template <> struct ShapeSampleTraits<Cone> {
   using Sample = ConeSample;
 
-  static Sample sample(const Cone &cone, std::size_t pointCount);
+  static ConeSample sample(const Cone &cone);
 };
 
 template <typename Shape> class ShapePointSampler {
@@ -41,8 +41,8 @@ public:
   explicit ShapePointSampler(const Shape &shape) : m_shape(shape) {
   }
 
-  Sample sample(std::size_t pointCount) const {
-    return ShapeSampleTraits<Shape>::sample(m_shape, pointCount);
+  Sample sample() const {
+    return ShapeSampleTraits<Shape>::sample(m_shape);
   }
 
 private:

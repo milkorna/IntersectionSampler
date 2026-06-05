@@ -8,15 +8,15 @@
 PlanePointSampler::PlanePointSampler(const Plane &plane) : m_plane(plane) {
 }
 
-PlaneSample PlanePointSampler::sample(size_t gridSize) const {
-  if (gridSize < 2) {
+PlaneSample PlanePointSampler::sample() const {
+  if (m_gridSize < 2) {
     throw std::runtime_error("Plane grid size must be at least 2.");
   }
 
   PlaneSample sample;
   sample.origin = m_plane.getOrigin();
 
-  sample.points.reserve(gridSize * gridSize);
+  sample.points.reserve(m_gridSize * m_gridSize);
 
   const Point3D origin = m_plane.getOrigin();
   const Direction3D refDir = m_plane.getRefDir();
@@ -27,12 +27,13 @@ PlaneSample PlanePointSampler::sample(size_t gridSize) const {
   const double minValue = input_limits::MinCoordinate;
   const double maxValue = input_limits::MaxCoordinate;
 
-  const double step = (maxValue - minValue) / static_cast<double>(gridSize - 1);
+  const double step =
+      (maxValue - minValue) / static_cast<double>(m_gridSize - 1);
 
-  for (size_t i = 0; i < gridSize; ++i) {
+  for (size_t i = 0; i < m_gridSize; ++i) {
     const double u = minValue + step * static_cast<double>(i);
 
-    for (size_t j = 0; j < gridSize; ++j) {
+    for (size_t j = 0; j < m_gridSize; ++j) {
       const double v = minValue + step * static_cast<double>(j);
 
       const Vector3D offset = refDir.toVector() * u + secondDir.toVector() * v;

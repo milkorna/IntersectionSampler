@@ -12,14 +12,17 @@ class IIntersectionSampler {
 public:
   virtual ~IIntersectionSampler() = default;
 
-  virtual Point3DArray sample(const size_t pointCount) const = 0;
+  virtual Point3DArray sample() const = 0;
+
+protected:
+  static constexpr std::size_t m_intersectionPointCount = 100;
 };
 
 class ConeIntersectionSampler final : public IIntersectionSampler {
 public:
   ConeIntersectionSampler(const Plane &plane, const Cone &cone);
 
-  Point3DArray sample(const size_t pointCount) const override;
+  Point3DArray sample() const override;
 
 private:
   Plane m_plane;
@@ -30,7 +33,7 @@ class CylinderIntersectionSampler final : public IIntersectionSampler {
 public:
   CylinderIntersectionSampler(const Plane &plane, const Cylinder &cylinder);
 
-  Point3DArray sample(const size_t pointCount) const override;
+  Point3DArray sample() const override;
 
 private:
   Plane m_plane;
@@ -42,7 +45,7 @@ public:
   explicit IntersectionPointSampler(
       std::unique_ptr<IIntersectionSampler> sampler);
 
-  Point3DArray sample(const size_t pointCount) const;
+  Point3DArray sample() const;
 
 private:
   std::unique_ptr<IIntersectionSampler> m_sampler;

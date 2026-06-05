@@ -3,8 +3,8 @@
 #include <fstream>
 #include <stdexcept>
 
-void DataWriter::writePoints(const std::string &filename,
-                             const Point3DArray &points) {
+void DataWriter::writeIntersectionPoints(const std::string &filename,
+                                         const Point3DArray &points) {
   std::ofstream output(filename);
 
   if (!output.is_open()) {

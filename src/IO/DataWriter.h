@@ -10,8 +10,8 @@
 
 class DataWriter {
 public:
-  static void writePoints(const std::string &filename,
-                          const Point3DArray &points);
+  static void writeIntersectionPoints(const std::string &filename,
+                                      const Point3DArray &points);
 
   static void writePlaneSample(const std::string &filename,
                                const PlaneSample &sample);

@@ -207,8 +207,8 @@ ConeIntersectionSampler::ConeIntersectionSampler(const Plane &plane,
     : m_plane(plane), m_cone(cone) {
 }
 
-Point3DArray ConeIntersectionSampler::sample(const size_t pointCount) const {
-  if (pointCount == 0) {
+Point3DArray ConeIntersectionSampler::sample() const {
+  if (m_intersectionPointCount == 0) {
     return {};
   }
 
@@ -222,15 +222,16 @@ Point3DArray ConeIntersectionSampler::sample(const size_t pointCount) const {
       Vector3D{m_plane.getOrigin(), apex}.dot(m_plane.getNormal());
 
   if (std::abs(numerator) < constants::ComputationTolerance) {
-    return sampleConePlaneThroughApex(frame, m_plane, radius, pointCount);
+    return sampleConePlaneThroughApex(frame, m_plane, radius,
+                                      m_intersectionPointCount);
   }
 
   Point3DArray points;
-  points.reserve(pointCount);
+  points.reserve(m_intersectionPointCount);
 
-  for (size_t i = 0; i < pointCount; ++i) {
+  for (size_t i = 0; i < m_intersectionPointCount; ++i) {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
-                         static_cast<double>(pointCount);
+                         static_cast<double>(m_intersectionPointCount);
 
     const Vector3D radial =
         sampling_utils::radial(frame.getXDir(), frame.getYDir(), theta);
@@ -266,9 +267,8 @@ CylinderIntersectionSampler::CylinderIntersectionSampler(
     : m_plane(plane), m_cylinder(cylinder) {
 }
 
-Point3DArray
-CylinderIntersectionSampler::sample(const size_t pointCount) const {
-  if (pointCount == 0) {
+Point3DArray CylinderIntersectionSampler::sample() const {
+  if (m_intersectionPointCount == 0) {
     return {};
   }
 
@@ -281,10 +281,12 @@ CylinderIntersectionSampler::sample(const size_t pointCount) const {
   const double denominator = frame.getAxisDirection().dot(m_plane.getNormal());
 
   if (std::abs(denominator) >= constants::ComputationTolerance) {
-    return sampleCylinderByAngle(frame, m_plane, radius, pointCount);
+    return sampleCylinderByAngle(frame, m_plane, radius,
+                                 m_intersectionPointCount);
   }
 
-  return sampleCylinderPlaneParallelToAxis(frame, m_plane, radius, pointCount);
+  return sampleCylinderPlaneParallelToAxis(frame, m_plane, radius,
+                                           m_intersectionPointCount);
 }
 
 IntersectionPointSampler::IntersectionPointSampler(
@@ -295,6 +297,6 @@ IntersectionPointSampler::IntersectionPointSampler(
   }
 }
 
-Point3DArray IntersectionPointSampler::sample(size_t pointCount) const {
-  return m_sampler->sample(pointCount);
+Point3DArray IntersectionPointSampler::sample() const {
+  return m_sampler->sample();
 }

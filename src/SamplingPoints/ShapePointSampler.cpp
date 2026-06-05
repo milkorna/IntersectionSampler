@@ -7,6 +7,9 @@
 
 namespace {
 
+constexpr std::size_t basePointCount = 47;
+constexpr std::size_t generatrixPointCount = 47;
+
 Point3DArray sampleCircle(const Point3D &center,
                           const Direction3D &axisDirection, double radius,
                           std::size_t pointCount) {
@@ -18,7 +21,6 @@ Point3DArray sampleCircle(const Point3D &center,
   points.reserve(pointCount);
 
   const Direction3D xDirection = sampling_utils::perpendicular(axisDirection);
-
   const Direction3D yDirection = axisDirection.cross(xDirection);
 
   for (std::size_t i = 0; i < pointCount; ++i) {
@@ -61,8 +63,7 @@ Point3DArray sampleSegment(const Point3D &start, const Point3D &end,
 
 } // namespace
 
-CylinderSample ShapeSampleTraits<Cylinder>::sample(const Cylinder &cylinder,
-                                                   std::size_t pointCount) {
+CylinderSample ShapeSampleTraits<Cylinder>::sample(const Cylinder &cylinder) {
   const Point3D firstBaseCenter = cylinder.getFirstBaseCenter();
   const Point3D secondBaseCenter = cylinder.getSecondBaseCenter();
   const double radius = cylinder.getRadius();
@@ -73,15 +74,14 @@ CylinderSample ShapeSampleTraits<Cylinder>::sample(const Cylinder &cylinder,
   CylinderSample sample;
   sample.axis = {firstBaseCenter, secondBaseCenter};
   sample.bottomBasePoints =
-      sampleCircle(firstBaseCenter, axisDirection, radius, pointCount);
+      sampleCircle(firstBaseCenter, axisDirection, radius, basePointCount);
   sample.topBasePoints =
-      sampleCircle(secondBaseCenter, axisDirection, radius, pointCount);
+      sampleCircle(secondBaseCenter, axisDirection, radius, basePointCount);
 
   return sample;
 }
 
-ConeSample ShapeSampleTraits<Cone>::sample(const Cone &cone,
-                                           std::size_t pointCount) {
+ConeSample ShapeSampleTraits<Cone>::sample(const Cone &cone) {
   const Point3D baseCenter = cone.getBaseCenter();
   const Point3D apex = cone.getApex();
   const double radius = cone.getRadius();
@@ -98,9 +98,9 @@ ConeSample ShapeSampleTraits<Cone>::sample(const Cone &cone,
   sample.axis = {baseCenter, apex};
   sample.apex = apex;
   sample.basePoints =
-      sampleCircle(baseCenter, axisDirection, radius, pointCount);
+      sampleCircle(baseCenter, axisDirection, radius, basePointCount);
   sample.generatrixPoints =
-      sampleSegment(generatrixBasePoint, apex, pointCount);
+      sampleSegment(generatrixBasePoint, apex, generatrixPointCount);
 
   return sample;
 }
