@@ -14,7 +14,7 @@ public:
   double getY() const;
   double getZ() const;
 
-  bool isEqualTo(const Point3D &other, const double tolerance = 1e-6) const;
+  bool isEqual(const Point3D &other, const double tolerance = 1e-6) const;
   Point3D translated(const Vector3D &offset) const;
 
 private:

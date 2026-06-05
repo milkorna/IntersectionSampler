@@ -22,14 +22,15 @@ Vector3D Direction3D::toVector() const {
 }
 
 Direction3D::Direction3D(double xVal, double yVal, double zVal) {
-  setNormalized(xVal, yVal, zVal);
+  normalize(xVal, yVal, zVal);
 }
 
 Direction3D::Direction3D(const Vector3D &vector) {
-  setNormalized(vector.getX(), vector.getY(), vector.getZ());
+  normalize(vector.getX(), vector.getY(), vector.getZ());
 }
 
-void Direction3D::setNormalized(double xVal, double yVal, double zVal) {
+void Direction3D::normalize(const double xVal, const double yVal,
+                            const double zVal) {
   const double length = std::sqrt(xVal * xVal + yVal * yVal + zVal * zVal);
 
   if (length < constants::MinLength) {

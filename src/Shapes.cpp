@@ -14,7 +14,7 @@ void validateRadius(double radius) {
 
 void validateDifferentPoints(const Point3D &first, const Point3D &second,
                              const char *message) {
-  if (first.isEqualTo(second, constants::PointTolerance)) {
+  if (first.isEqual(second, constants::PointTolerance)) {
     throw std::invalid_argument(message);
   }
 }

@@ -21,7 +21,7 @@ public:
   Vector3D cross(const Vector3D &other) const;
 
 private:
-  void setNormalized(double xVal, double yVal, double zVal);
+  void normalize(const double xVal, const double yVal, const double zVal);
 
 private:
   double x{1.0};

@@ -39,7 +39,7 @@ PlaneSample PlanePointSampler::sample(size_t gridSize) const {
 
       const Point3D point = origin.translated(offset);
 
-      if (!point.isEqualTo(origin)) {
+      if (!point.isEqual(origin)) {
         sample.points.push_back(point);
       }
     }

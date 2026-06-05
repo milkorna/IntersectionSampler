@@ -17,7 +17,7 @@ double Point3D::getZ() const {
   return z;
 }
 
-bool Point3D::isEqualTo(const Point3D &other, const double tolerance) const {
+bool Point3D::isEqual(const Point3D &other, const double tolerance) const {
   return (std::abs(x - other.x) < tolerance) &&
          (std::abs(y - other.y) < tolerance) &&
          (std::abs(z - other.z) < tolerance);
