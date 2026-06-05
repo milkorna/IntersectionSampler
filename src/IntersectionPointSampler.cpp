@@ -10,41 +10,59 @@
 
 namespace {
 
-struct RevolutionFrame {
-  Point3D origin;
-  Direction3D axisDirection;
-  Direction3D xDir;
-  Direction3D yDir;
-  double height{0.0};
-};
+class RevolutionFrame {
+public:
+  RevolutionFrame(const Point3D &origin, const Point3D &axisEnd)
+      : m_origin(origin) {
+    const Vector3D axis{origin, axisEnd};
+    m_height = axis.getLength();
 
-RevolutionFrame makeRevolutionFrame(const Point3D &origin,
-                                    const Point3D &axisEnd) {
-  const Vector3D axis{origin, axisEnd};
-  const double height = axis.getLength();
+    if (m_height < constants::MinLength) {
+      throw std::runtime_error(
+          "Failed to create revolution frame: zero height.");
+    }
 
-  if (height < constants::MinLength) {
-    throw std::runtime_error("Failed to create revolution frame: zero height.");
+    m_axisDirection = Direction3D{axis};
+    m_xDir = sampling_utils::makePerpendicularDirection(m_axisDirection);
+    m_yDir = m_axisDirection.cross(m_xDir);
   }
 
-  const Direction3D axisDirection{axis};
+  Point3D getOrigin() const {
+    return m_origin;
+  }
 
-  const Direction3D xDir =
-      sampling_utils::makePerpendicularDirection(axisDirection);
+  Direction3D getAxisDirection() const {
+    return m_axisDirection;
+  }
 
-  const Direction3D yDir = axisDirection.cross(xDir);
+  Direction3D getXDir() const {
+    return m_xDir;
+  }
 
-  return RevolutionFrame{origin, axisDirection, xDir, yDir, height};
-}
+  Direction3D getYDir() const {
+    return m_yDir;
+  }
+
+  double getHeight() const {
+    return m_height;
+  }
+
+private:
+  Point3D m_origin;
+  Direction3D m_axisDirection;
+  Direction3D m_xDir;
+  Direction3D m_yDir;
+  double m_height{0.0};
+};
 
 std::vector<double>
 findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
                                 const Direction3D &planeNormal, double radius) {
-  const double k = radius / frame.height;
+  const double k = radius / frame.getHeight();
 
-  const double a = frame.axisDirection.dot(planeNormal);
-  const double b = k * frame.xDir.dot(planeNormal);
-  const double c = k * frame.yDir.dot(planeNormal);
+  const double a = frame.getAxisDirection().dot(planeNormal);
+  const double b = k * frame.getXDir().dot(planeNormal);
+  const double c = k * frame.getYDir().dot(planeNormal);
 
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
@@ -63,7 +81,7 @@ std::vector<Point3D> sampleConePlaneThroughApex(const RevolutionFrame &frame,
       findConeGeneratrixAnglesInPlane(frame, plane.getNormal(), radius);
 
   if (angles.empty()) {
-    points.push_back(frame.origin);
+    points.push_back(frame.getOrigin());
     return points;
   }
 
@@ -73,20 +91,20 @@ std::vector<Point3D> sampleConePlaneThroughApex(const RevolutionFrame &frame,
   points.reserve(pointsPerGeneratrix * angles.size());
 
   for (const double theta : angles) {
-    const Vector3D radial =
-        sampling_utils::makeUnitRadialVector(frame.xDir, frame.yDir, theta);
+    const Vector3D radial = sampling_utils::makeUnitRadialVector(
+        frame.getXDir(), frame.getYDir(), theta);
 
     for (size_t i = 0; i < pointsPerGeneratrix; ++i) {
       const double t =
           static_cast<double>(i) / static_cast<double>(pointsPerGeneratrix - 1);
 
-      const double axial = frame.height * t;
-      const double currentRadius = radius * axial / frame.height;
+      const double axial = frame.getHeight() * t;
+      const double currentRadius = radius * axial / frame.getHeight();
 
       const Vector3D offset =
-          frame.axisDirection.toVector() * axial + radial * currentRadius;
+          frame.getAxisDirection().toVector() * axial + radial * currentRadius;
 
-      points.push_back(frame.origin.translated(offset));
+      points.push_back(frame.getOrigin().translated(offset));
     }
   }
 
@@ -97,10 +115,10 @@ std::vector<double>
 findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
                                     const Plane &plane, double radius) {
   const double a =
-      Vector3D{plane.getOrigin(), frame.origin}.dot(plane.getNormal());
+      Vector3D{plane.getOrigin(), frame.getOrigin()}.dot(plane.getNormal());
 
-  const double b = radius * frame.xDir.dot(plane.getNormal());
-  const double c = radius * frame.yDir.dot(plane.getNormal());
+  const double b = radius * frame.getXDir().dot(plane.getNormal());
+  const double c = radius * frame.getYDir().dot(plane.getNormal());
 
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
@@ -128,14 +146,15 @@ sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
   points.reserve(pointsPerGeneratrix * angles.size());
 
   for (const double theta : angles) {
-    const Vector3D radial =
-        sampling_utils::makeUnitRadialVector(frame.xDir, frame.yDir, theta);
+    const Vector3D radial = sampling_utils::makeUnitRadialVector(
+        frame.getXDir(), frame.getYDir(), theta);
 
-    const Point3D pointOnBaseCircle = frame.origin.translated(radial * radius);
+    const Point3D pointOnBaseCircle =
+        frame.getOrigin().translated(radial * radius);
 
     const std::vector<Point3D> linePoints = sampling_utils::sampleFiniteLine(
-        pointOnBaseCircle, frame.axisDirection.toVector(), frame.height,
-        pointsPerGeneratrix);
+        pointOnBaseCircle, frame.getAxisDirection().toVector(),
+        frame.getHeight(), pointsPerGeneratrix);
 
     points.insert(points.end(), linePoints.begin(), linePoints.end());
   }
@@ -152,7 +171,7 @@ std::vector<Point3D> sampleCylinderByAngle(const RevolutionFrame &frame,
     return points;
   }
 
-  const double denominator = frame.axisDirection.dot(plane.getNormal());
+  const double denominator = frame.getAxisDirection().dot(plane.getNormal());
 
   if (std::abs(denominator) < constants::ComputationTolerance) {
     return points;
@@ -164,22 +183,23 @@ std::vector<Point3D> sampleCylinderByAngle(const RevolutionFrame &frame,
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
-    const Vector3D radial =
-        sampling_utils::makeUnitRadialVector(frame.xDir, frame.yDir, theta);
+    const Vector3D radial = sampling_utils::makeUnitRadialVector(
+        frame.getXDir(), frame.getYDir(), theta);
 
-    const Point3D pointOnBaseCircle = frame.origin.translated(radial * radius);
+    const Point3D pointOnBaseCircle =
+        frame.getOrigin().translated(radial * radius);
 
     const double numerator =
         Vector3D{plane.getOrigin(), pointOnBaseCircle}.dot(plane.getNormal());
 
     const double axial = -numerator / denominator;
 
-    if (!sampling_utils::isInRange(axial, 0.0, frame.height)) {
+    if (!sampling_utils::isInRange(axial, 0.0, frame.getHeight())) {
       continue;
     }
 
-    points.push_back(
-        pointOnBaseCircle.translated(frame.axisDirection.toVector() * axial));
+    points.push_back(pointOnBaseCircle.translated(
+        frame.getAxisDirection().toVector() * axial));
   }
 
   return points;
@@ -203,7 +223,7 @@ std::vector<Point3D> ConeIntersectionSampler::sample(size_t pointCount) const {
   const Point3D baseCenter = m_cone.getBaseCenter();
   const double radius = m_cone.getRadius();
 
-  const RevolutionFrame frame = makeRevolutionFrame(apex, baseCenter);
+  const RevolutionFrame frame{apex, baseCenter};
 
   const double numerator =
       Vector3D{m_plane.getOrigin(), apex}.dot(m_plane.getNormal());
@@ -218,11 +238,11 @@ std::vector<Point3D> ConeIntersectionSampler::sample(size_t pointCount) const {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
-    const Vector3D radial =
-        sampling_utils::makeUnitRadialVector(frame.xDir, frame.yDir, theta);
+    const Vector3D radial = sampling_utils::makeUnitRadialVector(
+        frame.getXDir(), frame.getYDir(), theta);
 
-    const Vector3D generatrixDirection =
-        frame.axisDirection.toVector() + radial * (radius / frame.height);
+    const Vector3D generatrixDirection = frame.getAxisDirection().toVector() +
+                                         radial * (radius / frame.getHeight());
 
     const double denominator = generatrixDirection.dot(m_plane.getNormal());
 
@@ -232,14 +252,14 @@ std::vector<Point3D> ConeIntersectionSampler::sample(size_t pointCount) const {
 
     const double axial = -numerator / denominator;
 
-    if (!sampling_utils::isInRange(axial, 0.0, frame.height)) {
+    if (!sampling_utils::isInRange(axial, 0.0, frame.getHeight())) {
       continue;
     }
 
-    const double currentRadius = radius * axial / frame.height;
+    const double currentRadius = radius * axial / frame.getHeight();
 
     const Vector3D offset =
-        frame.axisDirection.toVector() * axial + radial * currentRadius;
+        frame.getAxisDirection().toVector() * axial + radial * currentRadius;
 
     points.push_back(apex.translated(offset));
   }
@@ -262,10 +282,9 @@ CylinderIntersectionSampler::sample(size_t pointCount) const {
   const Point3D secondBaseCenter = m_cylinder.getSecondBaseCenter();
   const double radius = m_cylinder.getRadius();
 
-  const RevolutionFrame frame =
-      makeRevolutionFrame(firstBaseCenter, secondBaseCenter);
+  const RevolutionFrame frame{firstBaseCenter, secondBaseCenter};
 
-  const double denominator = frame.axisDirection.dot(m_plane.getNormal());
+  const double denominator = frame.getAxisDirection().dot(m_plane.getNormal());
 
   if (std::abs(denominator) >= constants::ComputationTolerance) {
     return sampleCylinderByAngle(frame, m_plane, radius, pointCount);
