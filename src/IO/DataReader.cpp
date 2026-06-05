@@ -7,11 +7,12 @@
 
 namespace {
 
-bool isInRange(double value, double minValue, double maxValue) {
+bool isInRange(const double value, const double minValue,
+               const double maxValue) {
   return value >= minValue && value <= maxValue;
 }
 
-void validateCoordinate(double value, const std::string &name) {
+void validateCoordinate(const double value, const std::string &name) {
   if (!isInRange(value, input_limits::MinCoordinate,
                  input_limits::MaxCoordinate)) {
     throw std::runtime_error(name + " must be in range [-10.0, 10.0]");
@@ -24,7 +25,7 @@ void validatePointCoordinates(const Point3D &point) {
   validateCoordinate(point.getZ(), "Point z coordinate");
 }
 
-void validateRadius(double radius) {
+void validateRadius(const double radius) {
   if (!isInRange(radius, input_limits::MinRadius, input_limits::MaxRadius)) {
     throw std::runtime_error("Radius must be in range [0.0, 5.0]");
   }
@@ -36,7 +37,8 @@ void validateRadius(double radius) {
 
 } // namespace
 
-DataReader::DataReader(std::string filename) : m_filename(std::move(filename)) {
+DataReader::DataReader(const std::string &filename)
+    : m_filename(std::move(filename)) {
 }
 
 InputData DataReader::read() const {

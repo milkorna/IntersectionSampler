@@ -57,7 +57,7 @@ void writeShapeSample(const ShapeInputData &shapeData,
   throw std::runtime_error("Unsupported shape type.");
 }
 
-std::string shapeTypeToString(ShapeType type) {
+std::string shapeTypeToString(const ShapeType type) {
   switch (type) {
   case ShapeType::Cylinder:
     return "cylinder";

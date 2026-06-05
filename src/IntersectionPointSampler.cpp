@@ -57,7 +57,8 @@ private:
 
 std::vector<double>
 findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
-                                const Direction3D &planeNormal, double radius) {
+                                const Direction3D &planeNormal,
+                                const double radius) {
   const double k = radius / frame.getHeight();
 
   const double a = frame.getAxisDirection().dot(planeNormal);
@@ -69,8 +70,8 @@ findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
 
 std::vector<Point3D> sampleConePlaneThroughApex(const RevolutionFrame &frame,
                                                 const Plane &plane,
-                                                double radius,
-                                                size_t pointCount) {
+                                                const double radius,
+                                                const size_t pointCount) {
   std::vector<Point3D> points;
 
   if (pointCount == 0) {
@@ -113,7 +114,7 @@ std::vector<Point3D> sampleConePlaneThroughApex(const RevolutionFrame &frame,
 
 std::vector<double>
 findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
-                                    const Plane &plane, double radius) {
+                                    const Plane &plane, const double radius) {
   const double a =
       Vector3D{plane.getOrigin(), frame.getOrigin()}.dot(plane.getNormal());
 
@@ -125,8 +126,8 @@ findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
 
 std::vector<Point3D>
 sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
-                                  const Plane &plane, double radius,
-                                  size_t pointCount) {
+                                  const Plane &plane, const double radius,
+                                  const size_t pointCount) {
   std::vector<Point3D> points;
 
   if (pointCount == 0) {
@@ -163,8 +164,9 @@ sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
 }
 
 std::vector<Point3D> sampleCylinderByAngle(const RevolutionFrame &frame,
-                                           const Plane &plane, double radius,
-                                           size_t pointCount) {
+                                           const Plane &plane,
+                                           const double radius,
+                                           const size_t pointCount) {
   std::vector<Point3D> points;
 
   if (pointCount == 0) {
@@ -212,7 +214,8 @@ ConeIntersectionSampler::ConeIntersectionSampler(const Plane &plane,
     : m_plane(plane), m_cone(cone) {
 }
 
-std::vector<Point3D> ConeIntersectionSampler::sample(size_t pointCount) const {
+std::vector<Point3D>
+ConeIntersectionSampler::sample(const size_t pointCount) const {
   std::vector<Point3D> points;
 
   if (pointCount == 0) {
@@ -273,7 +276,7 @@ CylinderIntersectionSampler::CylinderIntersectionSampler(
 }
 
 std::vector<Point3D>
-CylinderIntersectionSampler::sample(size_t pointCount) const {
+CylinderIntersectionSampler::sample(const size_t pointCount) const {
   if (pointCount == 0) {
     return {};
   }

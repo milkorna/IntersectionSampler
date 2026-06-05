@@ -18,7 +18,7 @@ struct PlaneInputData {
   Point3D thirdPoint;
 };
 
-enum class ShapeType : unsigned int { Cylinder = 0, Cone };
+enum class ShapeType : unsigned int { Cone = 0, Cylinder };
 
 struct ShapeInputData {
   ShapeType type;

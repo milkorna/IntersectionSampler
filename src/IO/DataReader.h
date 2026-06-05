@@ -7,7 +7,7 @@
 
 class DataReader {
 public:
-  explicit DataReader(std::string filename);
+  explicit DataReader(const std::string &filename);
 
   InputData read() const;
 
