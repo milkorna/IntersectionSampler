@@ -8,10 +8,10 @@
 
 #include "IO/DataReader.h"
 #include "IO/DataWriter.h"
-#include "IntersectionPointSampler.h"
-#include "IntersectionPointSamplerFactory.h"
-#include "PlanePointSampler.h"
-#include "ShapePointSampler.h"
+#include "SamplingPoints/IntersectionPointSampler.h"
+#include "SamplingPoints/IntersectionPointSamplerFactory.h"
+#include "SamplingPoints/PlanePointSampler.h"
+#include "SamplingPoints/ShapePointSampler.h"
 
 namespace {
 

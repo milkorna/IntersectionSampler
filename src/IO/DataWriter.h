@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "Common/Point3D.h"
-#include "PlanePointSampler.h"
-#include "ShapePointSampler.h"
+#include "SamplingPoints/PlanePointSampler.h"
+#include "SamplingPoints/ShapePointSampler.h"
 
 class DataWriter {
 public:
