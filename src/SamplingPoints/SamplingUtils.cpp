@@ -8,7 +8,7 @@
 
 namespace sampling_utils {
 
-Direction3D makePerpendicularDirection(const Direction3D &axisDirection) {
+Direction3D perpendicular(const Direction3D &axisDirection) {
   const Vector3D xAxis{1.0, 0.0, 0.0};
   const Vector3D yAxis{0.0, 1.0, 0.0};
 
@@ -25,8 +25,8 @@ Direction3D makePerpendicularDirection(const Direction3D &axisDirection) {
   return Direction3D{candidate};
 }
 
-Vector3D makeUnitRadialVector(const Direction3D &xDir, const Direction3D &yDir,
-                              const double theta) {
+Vector3D radial(const Direction3D &xDir, const Direction3D &yDir,
+                const double theta) {
   return xDir.toVector() * std::cos(theta) + yDir.toVector() * std::sin(theta);
 }
 

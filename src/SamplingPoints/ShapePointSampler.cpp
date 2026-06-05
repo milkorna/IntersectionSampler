@@ -1,105 +1,106 @@
 #include "ShapePointSampler.h"
 
-#include <cmath>
-
 #include "Common/Constants.h"
+#include "Common/Direction3D.h"
+#include "Common/Vector3D.h"
 #include "SamplingUtils.h"
 
-CylinderPointSampler::CylinderPointSampler(const Cylinder &cylinder)
-    : m_cylinder(cylinder) {
-}
+namespace {
 
-CylinderSample CylinderPointSampler::sample(const size_t pointCount) const {
+Point3DArray sampleCircle(const Point3D &center,
+                          const Direction3D &axisDirection, double radius,
+                          std::size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
 
-  const Point3D bottomCenter = m_cylinder.getFirstBaseCenter();
-  const Point3D topCenter = m_cylinder.getSecondBaseCenter();
-  const double radius = m_cylinder.getRadius();
+  Point3DArray points;
+  points.reserve(pointCount);
 
-  const Vector3D axis{bottomCenter, topCenter};
-  const Direction3D axisDirection{axis};
+  const Direction3D xDirection = sampling_utils::perpendicular(axisDirection);
 
-  const Direction3D xDir =
-      sampling_utils::makePerpendicularDirection(axisDirection);
-  const Direction3D yDir = axisDirection.cross(xDir);
+  const Direction3D yDirection = axisDirection.cross(xDirection);
 
-  CylinderSample sample;
-  sample.axis = {bottomCenter, topCenter};
-
-  sample.bottomBasePoints.reserve(pointCount);
-  sample.topBasePoints.reserve(pointCount);
-
-  for (size_t i = 0; i < pointCount; ++i) {
+  for (std::size_t i = 0; i < pointCount; ++i) {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
-    const Vector3D radialUnitVector =
-        sampling_utils::makeUnitRadialVector(xDir, yDir, theta);
-    const Vector3D radiusOffset = radialUnitVector * radius;
+    const Vector3D radial =
+        sampling_utils::radial(xDirection, yDirection, theta);
 
-    sample.bottomBasePoints.push_back(bottomCenter.translated(radiusOffset));
-    sample.topBasePoints.push_back(topCenter.translated(radiusOffset));
+    points.push_back(center.translated(radial * radius));
   }
+
+  return points;
+}
+
+Point3DArray sampleSegment(const Point3D &start, const Point3D &end,
+                           std::size_t pointCount) {
+  if (pointCount == 0) {
+    return {};
+  }
+
+  if (pointCount == 1) {
+    return {start};
+  }
+
+  Point3DArray points;
+  points.reserve(pointCount);
+
+  const Vector3D offset{start, end};
+
+  for (std::size_t i = 0; i < pointCount; ++i) {
+    const double t =
+        static_cast<double>(i) / static_cast<double>(pointCount - 1);
+
+    points.push_back(start.translated(offset * t));
+  }
+
+  return points;
+}
+
+} // namespace
+
+CylinderSample ShapeSampleTraits<Cylinder>::sample(const Cylinder &cylinder,
+                                                   std::size_t pointCount) {
+  const Point3D firstBaseCenter = cylinder.getFirstBaseCenter();
+  const Point3D secondBaseCenter = cylinder.getSecondBaseCenter();
+  const double radius = cylinder.getRadius();
+
+  const Vector3D axis{firstBaseCenter, secondBaseCenter};
+  const Direction3D axisDirection{axis};
+
+  CylinderSample sample;
+  sample.axis = {firstBaseCenter, secondBaseCenter};
+  sample.bottomBasePoints =
+      sampleCircle(firstBaseCenter, axisDirection, radius, pointCount);
+  sample.topBasePoints =
+      sampleCircle(secondBaseCenter, axisDirection, radius, pointCount);
 
   return sample;
 }
 
-ConePointSampler::ConePointSampler(const Cone &cone) : m_cone(cone) {
-}
-
-ConeSample ConePointSampler::sample(const size_t pointCount) const {
-  if (pointCount == 0) {
-    return {};
-  }
-
-  const Point3D baseCenter = m_cone.getBaseCenter();
-  const Point3D apex = m_cone.getApex();
-  const double radius = m_cone.getRadius();
+ConeSample ShapeSampleTraits<Cone>::sample(const Cone &cone,
+                                           std::size_t pointCount) {
+  const Point3D baseCenter = cone.getBaseCenter();
+  const Point3D apex = cone.getApex();
+  const double radius = cone.getRadius();
 
   const Vector3D axis{apex, baseCenter};
   const Direction3D axisDirection{axis};
 
-  const Direction3D xDir =
-      sampling_utils::makePerpendicularDirection(axisDirection);
-  const Direction3D yDir = axisDirection.cross(xDir);
+  const Direction3D xDirection = sampling_utils::perpendicular(axisDirection);
+
+  const Point3D generatrixBasePoint =
+      baseCenter.translated(xDirection.toVector() * radius);
 
   ConeSample sample;
   sample.axis = {baseCenter, apex};
   sample.apex = apex;
-
-  sample.basePoints.reserve(pointCount);
-
-  for (size_t i = 0; i < pointCount; ++i) {
-    const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
-                         static_cast<double>(pointCount);
-
-    const Vector3D radialUnitVector =
-        sampling_utils::makeUnitRadialVector(xDir, yDir, theta);
-    const Point3D basePoint = baseCenter.translated(radialUnitVector * radius);
-
-    sample.basePoints.push_back(basePoint);
-  }
-
-  if (!sample.basePoints.empty() && pointCount > 0) {
-    const Point3D generatrixBasePoint = sample.basePoints.front();
-    const Vector3D generatrixVector{apex, generatrixBasePoint};
-
-    sample.generatrixPoints.reserve(pointCount);
-
-    if (pointCount == 1) {
-      sample.generatrixPoints.push_back(apex);
-    } else {
-      for (size_t i = 0; i < pointCount; ++i) {
-        const double t =
-            static_cast<double>(i) / static_cast<double>(pointCount - 1);
-
-        sample.generatrixPoints.push_back(
-            apex.translated(generatrixVector * t));
-      }
-    }
-  }
+  sample.basePoints =
+      sampleCircle(baseCenter, axisDirection, radius, pointCount);
+  sample.generatrixPoints =
+      sampleSegment(generatrixBasePoint, apex, pointCount);
 
   return sample;
 }

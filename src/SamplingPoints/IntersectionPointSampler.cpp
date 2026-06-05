@@ -23,7 +23,7 @@ public:
     }
 
     m_axisDirection = Direction3D{axis};
-    m_xDir = sampling_utils::makePerpendicularDirection(m_axisDirection);
+    m_xDir = sampling_utils::perpendicular(m_axisDirection);
     m_yDir = m_axisDirection.cross(m_xDir);
   }
 
@@ -71,28 +71,26 @@ findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
 Point3DArray sampleConePlaneThroughApex(const RevolutionFrame &frame,
                                         const Plane &plane, const double radius,
                                         const size_t pointCount) {
-  Point3DArray points;
-
   if (pointCount == 0) {
-    return points;
+    return {};
   }
 
   const std::vector<double> angles =
       findConeGeneratrixAnglesInPlane(frame, plane.getNormal(), radius);
 
   if (angles.empty()) {
-    points.push_back(frame.getOrigin());
-    return points;
+    return {frame.getOrigin()};
   }
 
   const size_t pointsPerGeneratrix =
       std::max<size_t>(2, pointCount / angles.size());
 
+  Point3DArray points;
   points.reserve(pointsPerGeneratrix * angles.size());
 
   for (const double theta : angles) {
-    const Vector3D radial = sampling_utils::makeUnitRadialVector(
-        frame.getXDir(), frame.getYDir(), theta);
+    const Vector3D radial =
+        sampling_utils::radial(frame.getXDir(), frame.getYDir(), theta);
 
     for (size_t i = 0; i < pointsPerGeneratrix; ++i) {
       const double t =
@@ -127,27 +125,25 @@ Point3DArray sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
                                                const Plane &plane,
                                                const double radius,
                                                const size_t pointCount) {
-  Point3DArray points;
-
   if (pointCount == 0) {
-    return points;
+    return {};
   }
 
-  const std::vector<double> angles =
-      findCylinderGeneratrixAnglesInPlane(frame, plane, radius);
+  const auto angles = findCylinderGeneratrixAnglesInPlane(frame, plane, radius);
 
   if (angles.empty()) {
-    return points;
+    return {};
   }
 
   const size_t pointsPerGeneratrix =
       std::max<size_t>(2, pointCount / angles.size());
 
+  Point3DArray points;
   points.reserve(pointsPerGeneratrix * angles.size());
 
   for (const double theta : angles) {
-    const Vector3D radial = sampling_utils::makeUnitRadialVector(
-        frame.getXDir(), frame.getYDir(), theta);
+    const Vector3D radial =
+        sampling_utils::radial(frame.getXDir(), frame.getYDir(), theta);
 
     const Point3D pointOnBaseCircle =
         frame.getOrigin().translated(radial * radius);
@@ -165,26 +161,25 @@ Point3DArray sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
 Point3DArray sampleCylinderByAngle(const RevolutionFrame &frame,
                                    const Plane &plane, const double radius,
                                    const size_t pointCount) {
-  Point3DArray points;
-
   if (pointCount == 0) {
-    return points;
+    return {};
   }
 
   const double denominator = frame.getAxisDirection().dot(plane.getNormal());
 
   if (std::abs(denominator) < constants::ComputationTolerance) {
-    return points;
+    return {};
   }
 
+  Point3DArray points;
   points.reserve(pointCount);
 
   for (size_t i = 0; i < pointCount; ++i) {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
-    const Vector3D radial = sampling_utils::makeUnitRadialVector(
-        frame.getXDir(), frame.getYDir(), theta);
+    const Vector3D radial =
+        sampling_utils::radial(frame.getXDir(), frame.getYDir(), theta);
 
     const Point3D pointOnBaseCircle =
         frame.getOrigin().translated(radial * radius);
@@ -237,8 +232,8 @@ Point3DArray ConeIntersectionSampler::sample(const size_t pointCount) const {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
-    const Vector3D radial = sampling_utils::makeUnitRadialVector(
-        frame.getXDir(), frame.getYDir(), theta);
+    const Vector3D radial =
+        sampling_utils::radial(frame.getXDir(), frame.getYDir(), theta);
 
     const Vector3D generatrixDirection = frame.getAxisDirection().toVector() +
                                          radial * (radius / frame.getHeight());

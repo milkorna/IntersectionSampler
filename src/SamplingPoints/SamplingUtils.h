@@ -8,10 +8,10 @@
 
 namespace sampling_utils {
 
-Direction3D makePerpendicularDirection(const Direction3D &axisDirection);
+Direction3D perpendicular(const Direction3D &axisDirection);
 
-Vector3D makeUnitRadialVector(const Direction3D &xDir, const Direction3D &yDir,
-                              const double theta);
+Vector3D radial(const Direction3D &xDir, const Direction3D &yDir,
+                const double theta);
 
 bool isInRange(const double value, const double minValue,
                const double maxValue);
