@@ -19,44 +19,6 @@ constexpr std::size_t IntersectionPointCount = 100;
 constexpr std::size_t BasePointCount = 47;
 constexpr std::size_t PlaneGridSize = 9;
 
-std::filesystem::path makeOutputFilePath(const std::filesystem::path &outputDir,
-                                         const std::string &filename) {
-  return outputDir / filename;
-}
-
-void writeShapeSample(const ShapeInputData &shapeData,
-                      const std::filesystem::path &outputDir) {
-  switch (shapeData.type) {
-  case ShapeType::Cone: {
-    const Cone cone(shapeData);
-
-    const ConePointSampler shapeSampler(cone);
-    const ConeSample coneSample = shapeSampler.sample(BasePointCount);
-
-    const std::filesystem::path outputFile =
-        makeOutputFilePath(outputDir, "shape_cone_points.txt");
-
-    DataWriter::writeConeSample(outputFile.string(), coneSample);
-    return;
-  }
-
-  case ShapeType::Cylinder: {
-    const Cylinder cylinder(shapeData);
-
-    const CylinderPointSampler shapeSampler(cylinder);
-    const CylinderSample cylinderSample = shapeSampler.sample(BasePointCount);
-
-    const std::filesystem::path outputFile =
-        makeOutputFilePath(outputDir, "shape_cylinder_points.txt");
-
-    DataWriter::writeCylinderSample(outputFile.string(), cylinderSample);
-    return;
-  }
-  }
-
-  throw std::runtime_error("Unsupported shape type.");
-}
-
 std::string shapeTypeToString(const ShapeType type) {
   switch (type) {
   case ShapeType::Cylinder:
@@ -122,40 +84,47 @@ int main(int argc, char *argv[]) {
     const PlanePointSampler planeSampler(plane);
     const PlaneSample planeSample = planeSampler.sample(PlaneGridSize);
 
-    const std::filesystem::path planeOutputFile =
-        makeOutputFilePath(outputDir, "plane_points.txt");
+    const auto planeOutputFile = outputDir / "plane_points.txt";
 
     DataWriter::writePlaneSample(planeOutputFile.string(), planeSample);
 
-    writeShapeSample(data.shape, outputDir);
+    switch (data.shape.type) {
+    case ShapeType::Cone: {
+      const Cone cone(data.shape);
+
+      const ConePointSampler shapeSampler(cone);
+      const ConeSample coneSample = shapeSampler.sample(BasePointCount);
+
+      const auto outputFile = outputDir / "shape_cone_points.txt";
+
+      DataWriter::writeConeSample(outputFile.string(), coneSample);
+      break;
+    }
+    case ShapeType::Cylinder: {
+      const Cylinder cylinder(data.shape);
+
+      const CylinderPointSampler shapeSampler(cylinder);
+      const CylinderSample cylinderSample = shapeSampler.sample(BasePointCount);
+
+      const auto outputFile = outputDir / "shape_cylinder_points.txt";
+
+      DataWriter::writeCylinderSample(outputFile.string(), cylinderSample);
+      break;
+    }
+    }
 
     const IntersectionPointSampler intersectionSampler(
         IntersectionPointSamplerFactory::create(plane, data.shape));
 
-    const Point3DArray intersectionPoints =
+    const auto intersectionPoints =
         intersectionSampler.sample(IntersectionPointCount);
 
-    const std::filesystem::path intersectionOutputFile =
-        makeOutputFilePath(outputDir, "intersection_points.txt");
+    const auto intersectionOutputFile = outputDir / "intersection_points.txt";
 
     DataWriter::writePoints(intersectionOutputFile.string(),
                             intersectionPoints);
 
     std::cout << "\nOutput files directory: " << outputDir << '\n';
-    std::cout << "Plane points: " << planeOutputFile << '\n';
-
-    if (data.shape.type == ShapeType::Cone) {
-      std::cout << "Shape points: "
-                << makeOutputFilePath(outputDir, "shape_cone_points.txt")
-                << '\n';
-    } else {
-      std::cout << "Shape points: "
-                << makeOutputFilePath(outputDir, "shape_cylinder_points.txt")
-                << '\n';
-    }
-
-    std::cout << "Intersection points: " << intersectionOutputFile << '\n';
-
     std::cout << "Intersection points sample count: "
               << intersectionPoints.size() << '\n';
 

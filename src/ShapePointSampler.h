@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Shapes.h"
-
 #include <cstddef>
 #include <utility>
 #include <vector>
 
+#include "Common/Cone.h"
+#include "Common/Cylinder.h"
 #include "Common/Direction3D.h"
 #include "Common/Plane.h"
 #include "Common/Point3D.h"

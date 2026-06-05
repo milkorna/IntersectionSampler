@@ -13,6 +13,8 @@ add_executable(IntersectionSampler
     src/Common/Plane.cpp
     src/Common/Point3D.cpp
     src/Common/Vector3D.cpp
+    src/Common/Cone.cpp
+    src/Common/Cylinder.cpp
 
     src/IO/DataReader.cpp
     src/IO/DataWriter.cpp
@@ -22,7 +24,6 @@ add_executable(IntersectionSampler
     src/PlanePointSampler.cpp
     src/SamplingUtils.cpp
     src/ShapePointSampler.cpp
-    src/Shapes.cpp
 )
 
 target_include_directories(IntersectionSampler PRIVATE
