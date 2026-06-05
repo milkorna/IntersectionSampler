@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Constants.h"
+#include "Common/Constants.h"
 #include "SamplingUtils.h"
 
 CylinderPointSampler::CylinderPointSampler(const Cylinder &cylinder)

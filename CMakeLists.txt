@@ -9,13 +9,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(IntersectionSampler
     src/main.cpp
 
-    src/CommonTypes/Direction3D.cpp
-    src/CommonTypes/Plane.cpp
-    src/CommonTypes/Point3D.cpp
-    src/CommonTypes/Vector3D.cpp
+    src/Common/Direction3D.cpp
+    src/Common/Plane.cpp
+    src/Common/Point3D.cpp
+    src/Common/Vector3D.cpp
 
-    src/DataReader.cpp
-    src/DataWriter.cpp
+    src/IO/DataReader.cpp
+    src/IO/DataWriter.cpp
+
     src/IntersectionPointSampler.cpp
     src/IntersectionPointSamplerFactory.cpp
     src/PlanePointSampler.cpp

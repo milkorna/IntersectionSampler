@@ -2,8 +2,8 @@
 
 #include <stdexcept>
 
-#include "CommonTypes/Vector3D.h"
-#include "InputData.h"
+#include "Common/Vector3D.h"
+#include "IO/InputData.h"
 
 PlanePointSampler::PlanePointSampler(const Plane &plane) : m_plane(plane) {
 }

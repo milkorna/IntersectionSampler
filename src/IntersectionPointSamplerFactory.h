@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "CommonTypes/Plane.h"
-#include "InputData.h"
+#include "Common/Plane.h"
+#include "IO/InputData.h"
 #include "IntersectionPointSampler.h"
 
 class IntersectionPointSamplerFactory {

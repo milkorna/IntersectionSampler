@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "DataReader.h"
-#include "DataWriter.h"
+#include "IO/DataReader.h"
+#include "IO/DataWriter.h"
 #include "IntersectionPointSampler.h"
 #include "IntersectionPointSamplerFactory.h"
 #include "PlanePointSampler.h"

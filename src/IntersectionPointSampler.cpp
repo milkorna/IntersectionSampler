@@ -1,6 +1,6 @@
 #include "IntersectionPointSampler.h"
 
-#include "Constants.h"
+#include "Common/Constants.h"
 #include "SamplingUtils.h"
 
 #include <algorithm>

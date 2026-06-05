@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CommonTypes/Point3D.h"
+#include "Common/Point3D.h"
 
 namespace input_limits {
 

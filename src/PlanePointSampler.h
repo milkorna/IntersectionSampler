@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <vector>
 
-#include "CommonTypes/Plane.h"
-#include "CommonTypes/Point3D.h"
+#include "Common/Plane.h"
+#include "Common/Point3D.h"
 
 struct PlaneSample {
   Point3D origin;

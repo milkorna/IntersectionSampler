@@ -6,10 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include "CommonTypes/Direction3D.h"
-#include "CommonTypes/Plane.h"
-#include "CommonTypes/Point3D.h"
-#include "CommonTypes/Vector3D.h"
+#include "Common/Direction3D.h"
+#include "Common/Plane.h"
+#include "Common/Point3D.h"
+#include "Common/Vector3D.h"
 
 struct CylinderSample {
   std::pair<Point3D, Point3D> axis;

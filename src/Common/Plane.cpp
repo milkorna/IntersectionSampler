@@ -4,7 +4,7 @@
 
 #include "Constants.h"
 #include "Direction3D.h"
-#include "InputData.h"
+#include "IO/InputData.h"
 #include "Point3D.h"
 #include "Vector3D.h"
 

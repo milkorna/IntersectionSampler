@@ -4,7 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "Constants.h"
+#include "Common/Constants.h"
 
 namespace sampling_utils {
 

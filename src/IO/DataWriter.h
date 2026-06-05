@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "CommonTypes/Point3D.h"
+#include "Common/Point3D.h"
 #include "PlanePointSampler.h"
 #include "ShapePointSampler.h"
 

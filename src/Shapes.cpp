@@ -1,7 +1,7 @@
 #include <stdexcept>
 
-#include "CommonTypes/Point3D.h"
-#include "Constants.h"
+#include "Common/Constants.h"
+#include "Common/Point3D.h"
 #include "Shapes.h"
 
 namespace {

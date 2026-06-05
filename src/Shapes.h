@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InputData.h"
+#include "IO/InputData.h"
 
 class Cone {
 public:
