@@ -9,7 +9,7 @@ CylinderPointSampler::CylinderPointSampler(const Cylinder &cylinder)
     : m_cylinder(cylinder) {
 }
 
-CylinderSample CylinderPointSampler::sample(size_t pointCount) const {
+CylinderSample CylinderPointSampler::sample(const size_t pointCount) const {
   if (pointCount == 0) {
     return {};
   }
@@ -49,7 +49,7 @@ CylinderSample CylinderPointSampler::sample(size_t pointCount) const {
 ConePointSampler::ConePointSampler(const Cone &cone) : m_cone(cone) {
 }
 
-ConeSample ConePointSampler::sample(size_t pointCount) const {
+ConeSample ConePointSampler::sample(const size_t pointCount) const {
   if (pointCount == 0) {
     return {};
   }

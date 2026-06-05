@@ -30,12 +30,14 @@ Vector3D makeUnitRadialVector(const Direction3D &xDir, const Direction3D &yDir,
   return xDir.toVector() * std::cos(theta) + yDir.toVector() * std::sin(theta);
 }
 
-bool isInRange(double value, double minValue, double maxValue) {
+bool isInRange(const double value, const double minValue,
+               const double maxValue) {
   return value >= minValue - constants::ComputationTolerance &&
          value <= maxValue + constants::ComputationTolerance;
 }
 
-std::vector<double> solveTrigonometricEquation(double a, double b, double c) {
+std::vector<double> solveTrigonometricEquation(const double a, const double b,
+                                               const double c) {
   std::vector<double> angles;
 
   const double amplitude = std::sqrt(b * b + c * c);
@@ -70,7 +72,7 @@ std::vector<double> solveTrigonometricEquation(double a, double b, double c) {
 }
 
 Point3DArray sampleFiniteLine(const Point3D &startPoint,
-                              const Vector3D &direction, double length,
+                              const Vector3D &direction, const double length,
                               const size_t pointCount) {
   Point3DArray points;
 

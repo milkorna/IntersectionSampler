@@ -213,10 +213,8 @@ ConeIntersectionSampler::ConeIntersectionSampler(const Plane &plane,
 }
 
 Point3DArray ConeIntersectionSampler::sample(const size_t pointCount) const {
-  Point3DArray points;
-
   if (pointCount == 0) {
-    return points;
+    return {};
   }
 
   const Point3D apex = m_cone.getApex();
@@ -232,6 +230,7 @@ Point3DArray ConeIntersectionSampler::sample(const size_t pointCount) const {
     return sampleConePlaneThroughApex(frame, m_plane, radius, pointCount);
   }
 
+  Point3DArray points;
   points.reserve(pointCount);
 
   for (size_t i = 0; i < pointCount; ++i) {

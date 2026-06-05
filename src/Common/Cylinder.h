@@ -7,7 +7,7 @@ public:
   Cylinder() = default;
   explicit Cylinder(const ShapeInputData &inputData);
   explicit Cylinder(const Point3D &firstBaseCenter,
-                    const Point3D &secondBaseCenter, double radius);
+                    const Point3D &secondBaseCenter, const double radius);
 
   Point3D getFirstBaseCenter() const;
   Point3D getSecondBaseCenter() const;
