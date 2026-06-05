@@ -1,11 +1,15 @@
 #pragma once
 
+#include "Shapes.h"
+
 #include <cstddef>
 #include <utility>
 #include <vector>
 
-#include "CommonTypes.h"
-#include "Shapes.h"
+#include "CommonTypes/Direction3D.h"
+#include "CommonTypes/Plane.h"
+#include "CommonTypes/Point3D.h"
+#include "CommonTypes/Vector3D.h"
 
 struct CylinderSample {
   std::pair<Point3D, Point3D> axis;

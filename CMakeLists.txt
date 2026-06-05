@@ -1,22 +1,31 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(MyProject LANGUAGES CXX)
+project(IntersectionSampler LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(IntersectionSampler
-    src/CommonTypes.cpp
-    src/DataReader.cpp
-    src/IntersectionPointSampler.cpp
     src/main.cpp
-    src/Plane.cpp
+
+    src/CommonTypes/Direction3D.cpp
+    src/CommonTypes/Plane.cpp
+    src/CommonTypes/Point3D.cpp
+    src/CommonTypes/Vector3D.cpp
+
+    src/DataReader.cpp
     src/DataWriter.cpp
+    src/IntersectionPointSampler.cpp
+    src/IntersectionPointSamplerFactory.cpp
     src/PlanePointSampler.cpp
+    src/SamplingUtils.cpp
     src/ShapePointSampler.cpp
     src/Shapes.cpp
-    src/SamplingUtils.cpp
+)
+
+target_include_directories(IntersectionSampler PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 if (MSVC)

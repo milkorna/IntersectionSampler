@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+#include "CommonTypes/Vector3D.h"
 #include "InputData.h"
 
 PlanePointSampler::PlanePointSampler(const Plane &plane) : m_plane(plane) {
@@ -21,7 +22,7 @@ PlaneSample PlanePointSampler::sample(size_t gridSize) const {
   const Direction3D refDir = m_plane.getRefDir();
   const Direction3D normal = m_plane.getNormal();
 
-  const Direction3D secondDir{cross(normal, refDir)};
+  const Direction3D secondDir{normal.cross(refDir)};
 
   const double minValue = input_limits::MinCoordinate;
   const double maxValue = input_limits::MaxCoordinate;

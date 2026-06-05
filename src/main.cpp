@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
-#include "CommonTypes.h"
 #include "DataReader.h"
 #include "DataWriter.h"
 #include "IntersectionPointSampler.h"
+#include "IntersectionPointSamplerFactory.h"
 #include "PlanePointSampler.h"
 #include "ShapePointSampler.h"
 
@@ -22,23 +22,6 @@ constexpr std::size_t PlaneGridSize = 9;
 std::filesystem::path makeOutputFilePath(const std::filesystem::path &outputDir,
                                          const std::string &filename) {
   return outputDir / filename;
-}
-
-std::unique_ptr<IIntersectionSampler>
-createIntersectionSampler(const Plane &plane, const ShapeInputData &shapeData) {
-  switch (shapeData.type) {
-  case ShapeType::Cone: {
-    const Cone cone(shapeData);
-    return std::make_unique<ConeIntersectionSampler>(plane, cone);
-  }
-
-  case ShapeType::Cylinder: {
-    const Cylinder cylinder(shapeData);
-    return std::make_unique<CylinderIntersectionSampler>(plane, cylinder);
-  }
-  }
-
-  throw std::runtime_error("Unsupported shape type.");
 }
 
 void writeShapeSample(const ShapeInputData &shapeData,
@@ -147,7 +130,7 @@ int main(int argc, char *argv[]) {
     writeShapeSample(data.shape, outputDir);
 
     const IntersectionPointSampler intersectionSampler(
-        createIntersectionSampler(plane, data.shape));
+        IntersectionPointSamplerFactory::create(plane, data.shape));
 
     const std::vector<Point3D> intersectionPoints =
         intersectionSampler.sample(IntersectionPointCount);

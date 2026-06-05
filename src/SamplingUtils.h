@@ -2,7 +2,9 @@
 
 #include <vector>
 
-#include "CommonTypes.h"
+#include "CommonTypes/Direction3D.h"
+#include "CommonTypes/Point3D.h"
+#include "CommonTypes/Vector3D.h"
 
 namespace sampling_utils {
 

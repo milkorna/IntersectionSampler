@@ -18,12 +18,12 @@ CylinderSample CylinderPointSampler::sample(size_t pointCount) const {
   const Point3D topCenter = m_cylinder.getSecondBaseCenter();
   const double radius = m_cylinder.getRadius();
 
-  const Vector3D axis = Vector3D::between(bottomCenter, topCenter);
+  const Vector3D axis{bottomCenter, topCenter};
   const Direction3D axisDirection{axis};
 
   const Direction3D xDir =
       sampling_utils::makePerpendicularDirection(axisDirection);
-  const Direction3D yDir = Direction3D{cross(axisDirection, xDir)};
+  const Direction3D yDir = axisDirection.cross(xDir);
 
   CylinderSample sample;
   sample.axis = {bottomCenter, topCenter};
@@ -58,12 +58,12 @@ ConeSample ConePointSampler::sample(size_t pointCount) const {
   const Point3D apex = m_cone.getApex();
   const double radius = m_cone.getRadius();
 
-  const Vector3D axis = Vector3D::between(apex, baseCenter);
+  const Vector3D axis{apex, baseCenter};
   const Direction3D axisDirection{axis};
 
   const Direction3D xDir =
       sampling_utils::makePerpendicularDirection(axisDirection);
-  const Direction3D yDir = Direction3D{cross(axisDirection, xDir)};
+  const Direction3D yDir = axisDirection.cross(xDir);
 
   ConeSample sample;
   sample.axis = {baseCenter, apex};
@@ -84,8 +84,7 @@ ConeSample ConePointSampler::sample(size_t pointCount) const {
 
   if (!sample.basePoints.empty() && pointCount > 0) {
     const Point3D generatrixBasePoint = sample.basePoints.front();
-    const Vector3D generatrixVector =
-        Vector3D::between(apex, generatrixBasePoint);
+    const Vector3D generatrixVector{apex, generatrixBasePoint};
 
     sample.generatrixPoints.reserve(pointCount);
 

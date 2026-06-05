@@ -4,8 +4,10 @@
 #include <memory>
 #include <vector>
 
-#include "CommonTypes.h"
-#include "Plane.h"
+#include "CommonTypes/Direction3D.h"
+#include "CommonTypes/Plane.h"
+#include "CommonTypes/Point3D.h"
+#include "CommonTypes/Vector3D.h"
 #include "Shapes.h"
 
 class IIntersectionSampler {

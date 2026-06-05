@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "CommonTypes.h"
+#include "CommonTypes/Point3D.h"
 #include "Constants.h"
 #include "Shapes.h"
 

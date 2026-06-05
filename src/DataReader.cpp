@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include <utility>
 
-#include "CommonTypes.h"
 #include "Constants.h"
 #include "DataReader.h"
 

@@ -12,10 +12,10 @@ Direction3D makePerpendicularDirection(const Direction3D &axisDirection) {
   const Vector3D xAxis{1.0, 0.0, 0.0};
   const Vector3D yAxis{0.0, 1.0, 0.0};
 
-  Vector3D candidate = cross(axisDirection, xAxis);
+  Vector3D candidate = axisDirection.cross(xAxis);
 
   if (candidate.getLength() < constants::MinLength) {
-    candidate = cross(axisDirection, yAxis);
+    candidate = axisDirection.cross(yAxis);
   }
 
   if (candidate.getLength() < constants::MinLength) {

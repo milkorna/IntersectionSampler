@@ -20,7 +20,7 @@ struct RevolutionFrame {
 
 RevolutionFrame makeRevolutionFrame(const Point3D &origin,
                                     const Point3D &axisEnd) {
-  const Vector3D axis = Vector3D::between(origin, axisEnd);
+  const Vector3D axis{origin, axisEnd};
   const double height = axis.getLength();
 
   if (height < constants::MinLength) {
@@ -32,7 +32,7 @@ RevolutionFrame makeRevolutionFrame(const Point3D &origin,
   const Direction3D xDir =
       sampling_utils::makePerpendicularDirection(axisDirection);
 
-  const Direction3D yDir{cross(axisDirection, xDir).normalized()};
+  const Direction3D yDir = axisDirection.cross(xDir);
 
   return RevolutionFrame{origin, axisDirection, xDir, yDir, height};
 }
@@ -42,9 +42,9 @@ findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
                                 const Direction3D &planeNormal, double radius) {
   const double k = radius / frame.height;
 
-  const double a = dot(frame.axisDirection, planeNormal);
-  const double b = k * dot(frame.xDir, planeNormal);
-  const double c = k * dot(frame.yDir, planeNormal);
+  const double a = frame.axisDirection.dot(planeNormal);
+  const double b = k * frame.xDir.dot(planeNormal);
+  const double c = k * frame.yDir.dot(planeNormal);
 
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
@@ -96,11 +96,11 @@ std::vector<Point3D> sampleConePlaneThroughApex(const RevolutionFrame &frame,
 std::vector<double>
 findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
                                     const Plane &plane, double radius) {
-  const double a = dot(Vector3D::between(plane.getOrigin(), frame.origin),
-                       plane.getNormal());
+  const double a =
+      Vector3D{plane.getOrigin(), frame.origin}.dot(plane.getNormal());
 
-  const double b = radius * dot(frame.xDir, plane.getNormal());
-  const double c = radius * dot(frame.yDir, plane.getNormal());
+  const double b = radius * frame.xDir.dot(plane.getNormal());
+  const double c = radius * frame.yDir.dot(plane.getNormal());
 
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
@@ -152,7 +152,7 @@ std::vector<Point3D> sampleCylinderByAngle(const RevolutionFrame &frame,
     return points;
   }
 
-  const double denominator = dot(frame.axisDirection, plane.getNormal());
+  const double denominator = frame.axisDirection.dot(plane.getNormal());
 
   if (std::abs(denominator) < constants::ComputationTolerance) {
     return points;
@@ -170,8 +170,7 @@ std::vector<Point3D> sampleCylinderByAngle(const RevolutionFrame &frame,
     const Point3D pointOnBaseCircle = frame.origin.translated(radial * radius);
 
     const double numerator =
-        dot(Vector3D::between(plane.getOrigin(), pointOnBaseCircle),
-            plane.getNormal());
+        Vector3D{plane.getOrigin(), pointOnBaseCircle}.dot(plane.getNormal());
 
     const double axial = -numerator / denominator;
 
@@ -193,8 +192,7 @@ ConeIntersectionSampler::ConeIntersectionSampler(const Plane &plane,
     : m_plane(plane), m_cone(cone) {
 }
 
-std::vector<Point3D>
-ConeIntersectionSampler::sample(size_t pointCount) const {
+std::vector<Point3D> ConeIntersectionSampler::sample(size_t pointCount) const {
   std::vector<Point3D> points;
 
   if (pointCount == 0) {
@@ -208,7 +206,7 @@ ConeIntersectionSampler::sample(size_t pointCount) const {
   const RevolutionFrame frame = makeRevolutionFrame(apex, baseCenter);
 
   const double numerator =
-      dot(Vector3D::between(m_plane.getOrigin(), apex), m_plane.getNormal());
+      Vector3D{m_plane.getOrigin(), apex}.dot(m_plane.getNormal());
 
   if (std::abs(numerator) < constants::ComputationTolerance) {
     return sampleConePlaneThroughApex(frame, m_plane, radius, pointCount);
@@ -226,7 +224,7 @@ ConeIntersectionSampler::sample(size_t pointCount) const {
     const Vector3D generatrixDirection =
         frame.axisDirection.toVector() + radial * (radius / frame.height);
 
-    const double denominator = dot(generatrixDirection, m_plane.getNormal());
+    const double denominator = generatrixDirection.dot(m_plane.getNormal());
 
     if (std::abs(denominator) < constants::ComputationTolerance) {
       continue;
@@ -267,7 +265,7 @@ CylinderIntersectionSampler::sample(size_t pointCount) const {
   const RevolutionFrame frame =
       makeRevolutionFrame(firstBaseCenter, secondBaseCenter);
 
-  const double denominator = dot(frame.axisDirection, m_plane.getNormal());
+  const double denominator = frame.axisDirection.dot(m_plane.getNormal());
 
   if (std::abs(denominator) >= constants::ComputationTolerance) {
     return sampleCylinderByAngle(frame, m_plane, radius, pointCount);
@@ -284,7 +282,6 @@ IntersectionPointSampler::IntersectionPointSampler(
   }
 }
 
-std::vector<Point3D>
-IntersectionPointSampler::sample(size_t pointCount) const {
+std::vector<Point3D> IntersectionPointSampler::sample(size_t pointCount) const {
   return m_sampler->sample(pointCount);
 }

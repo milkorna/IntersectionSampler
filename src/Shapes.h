@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CommonTypes.h"
 #include "InputData.h"
 
 class Cone {
