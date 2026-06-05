@@ -11,7 +11,7 @@
 class DataWriter {
 public:
   static void writePoints(const std::string &filename,
-                          const std::vector<Point3D> &points);
+                          const Point3DArray &points);
 
   static void writePlaneSample(const std::string &filename,
                                const PlaneSample &sample);
@@ -25,8 +25,7 @@ public:
 private:
   static void writePoint(std::ostream &output, const Point3D &point);
 
-  static void writePointRange(std::ostream &output,
-                              const std::vector<Point3D> &points);
+  static void writePointRange(std::ostream &output, const Point3DArray &points);
 
   static void writeSectionHeader(std::ostream &output,
                                  const std::string &sectionName);

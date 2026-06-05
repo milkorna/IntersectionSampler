@@ -26,7 +26,7 @@ Direction3D makePerpendicularDirection(const Direction3D &axisDirection) {
 }
 
 Vector3D makeUnitRadialVector(const Direction3D &xDir, const Direction3D &yDir,
-                              double theta) {
+                              const double theta) {
   return xDir.toVector() * std::cos(theta) + yDir.toVector() * std::sin(theta);
 }
 
@@ -69,10 +69,10 @@ std::vector<double> solveTrigonometricEquation(double a, double b, double c) {
   return angles;
 }
 
-std::vector<Point3D> sampleFiniteLine(const Point3D &startPoint,
-                                      const Vector3D &direction, double length,
-                                      size_t pointCount) {
-  std::vector<Point3D> points;
+Point3DArray sampleFiniteLine(const Point3D &startPoint,
+                              const Vector3D &direction, double length,
+                              const size_t pointCount) {
+  Point3DArray points;
 
   if (pointCount == 0) {
     return points;

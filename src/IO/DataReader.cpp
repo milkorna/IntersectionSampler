@@ -1,9 +1,12 @@
+#include "DataReader.h"
+
 #include <fstream>
 #include <stdexcept>
 #include <utility>
 
 #include "Common/Constants.h"
-#include "DataReader.h"
+#include "Common/Point3D.h"
+#include "InputData.h"
 
 namespace {
 
@@ -37,11 +40,10 @@ void validateRadius(const double radius) {
 
 } // namespace
 
-DataReader::DataReader(const std::string &filename)
-    : m_filename(std::move(filename)) {
+DataReader::DataReader(std::string filename) : m_filename(std::move(filename)) {
 }
 
-InputData DataReader::read() const {
+InputData DataReader::getData() const {
   std::ifstream input(m_filename);
 
   if (!input.is_open()) {
@@ -49,20 +51,19 @@ InputData DataReader::read() const {
   }
 
   InputData data;
-
-  readPlane(input, data.plane);
-  readShape(input, data.shape);
+  data.plane = getPlaneData(input);
+  data.shape = getShapeData(input);
 
   return data;
 }
 
-Point3D DataReader::readPoint(std::istream &input) const {
+Point3D DataReader::getPoint(std::istream &input) const {
   double x = 0.0;
   double y = 0.0;
   double z = 0.0;
 
   if (!(input >> x >> y >> z)) {
-    throw std::runtime_error("Failed to read point coordinates");
+    throw std::runtime_error("Failed to read point coordinates.");
   }
 
   const Point3D point{x, y, z};
@@ -71,45 +72,50 @@ Point3D DataReader::readPoint(std::istream &input) const {
   return point;
 }
 
-void DataReader::readPlane(std::istream &input,
-                           PlaneInputData &planeData) const {
+PlaneInputData DataReader::getPlaneData(std::istream &input) const {
   std::string keyword;
 
   if (!(input >> keyword)) {
-    throw std::runtime_error("Failed to read plane keyword");
+    throw std::runtime_error("Failed to read plane keyword.");
   }
 
   if (keyword != "plane") {
-    throw std::runtime_error("Expected keyword 'plane'");
+    throw std::runtime_error("Expected keyword 'plane'.");
   }
 
-  planeData.firstPoint = readPoint(input);
-  planeData.secondPoint = readPoint(input);
-  planeData.thirdPoint = readPoint(input);
+  PlaneInputData planeData;
+  planeData.firstPoint = getPoint(input);
+  planeData.secondPoint = getPoint(input);
+  planeData.thirdPoint = getPoint(input);
+
+  return planeData;
 }
 
-void DataReader::readShape(std::istream &input,
-                           ShapeInputData &shapeData) const {
+ShapeInputData DataReader::getShapeData(std::istream &input) const {
   std::string keyword;
 
   if (!(input >> keyword)) {
-    throw std::runtime_error("Failed to read shape keyword");
+    throw std::runtime_error("Failed to read shape keyword.");
   }
+
+  ShapeInputData shapeData;
 
   if (keyword == "cylinder") {
     shapeData.type = ShapeType::Cylinder;
   } else if (keyword == "cone") {
     shapeData.type = ShapeType::Cone;
   } else {
-    throw std::runtime_error("Expected keyword 'cylinder' or 'cone'");
+    throw std::runtime_error("Expected keyword 'cylinder' or 'cone'.");
   }
 
-  shapeData.firstPoint = readPoint(input);
-  shapeData.secondPoint = readPoint(input);
+  shapeData.firstPoint = getPoint(input);
+  shapeData.secondPoint = getPoint(input);
 
   if (!(input >> shapeData.radius)) {
-    throw std::runtime_error("Failed to read radius");
+    throw std::runtime_error("Failed to read radius.");
   }
 
   validateRadius(shapeData.radius);
+
+  return shapeData;
 }

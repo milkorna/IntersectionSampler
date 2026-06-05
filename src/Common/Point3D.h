@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <vector>
 
 class Vector3D;
 class Direction3D;
@@ -22,3 +23,5 @@ private:
   double y{0.0};
   double z{0.0};
 };
+
+using Point3DArray = std::vector<Point3D>;

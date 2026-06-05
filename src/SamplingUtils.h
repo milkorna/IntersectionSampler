@@ -17,8 +17,8 @@ bool isInRange(double value, double minValue, double maxValue);
 
 std::vector<double> solveTrigonometricEquation(double a, double b, double c);
 
-std::vector<Point3D> sampleFiniteLine(const Point3D &startPoint,
-                                      const Vector3D &direction, double length,
-                                      size_t pointCount);
+Point3DArray sampleFiniteLine(const Point3D &startPoint,
+                              const Vector3D &direction, double length,
+                              const size_t pointCount);
 
 } // namespace sampling_utils

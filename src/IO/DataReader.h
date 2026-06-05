@@ -7,14 +7,14 @@
 
 class DataReader {
 public:
-  explicit DataReader(const std::string &filename);
+  explicit DataReader(std::string filename);
 
-  InputData read() const;
+  InputData getData() const;
 
 private:
-  Point3D readPoint(std::istream &input) const;
-  void readPlane(std::istream &input, PlaneInputData &planeData) const;
-  void readShape(std::istream &input, ShapeInputData &shapeData) const;
+  Point3D getPoint(std::istream &input) const;
+  PlaneInputData getPlaneData(std::istream &input) const;
+  ShapeInputData getShapeData(std::istream &input) const;
 
 private:
   std::string m_filename;

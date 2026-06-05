@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     std::filesystem::create_directories(outputDir);
 
     const DataReader reader(inputFile.string());
-    const InputData data = reader.read();
+    const InputData data = reader.getData();
 
     printInfo(data);
 
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
     const IntersectionPointSampler intersectionSampler(
         IntersectionPointSamplerFactory::create(plane, data.shape));
 
-    const std::vector<Point3D> intersectionPoints =
+    const Point3DArray intersectionPoints =
         intersectionSampler.sample(IntersectionPointCount);
 
     const std::filesystem::path intersectionOutputFile =

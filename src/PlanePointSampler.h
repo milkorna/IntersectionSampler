@@ -8,7 +8,7 @@
 
 struct PlaneSample {
   Point3D origin;
-  std::vector<Point3D> points;
+  Point3DArray points;
 };
 
 class PlanePointSampler {

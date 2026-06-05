@@ -13,14 +13,14 @@
 
 struct CylinderSample {
   std::pair<Point3D, Point3D> axis;
-  std::vector<Point3D> bottomBasePoints;
-  std::vector<Point3D> topBasePoints;
+  Point3DArray bottomBasePoints;
+  Point3DArray topBasePoints;
 };
 
 struct ConeSample {
   std::pair<Point3D, Point3D> axis;
-  std::vector<Point3D> basePoints;
-  std::vector<Point3D> generatrixPoints;
+  Point3DArray basePoints;
+  Point3DArray generatrixPoints;
   Point3D apex;
 };
 

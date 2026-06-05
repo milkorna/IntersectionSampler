@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 void DataWriter::writePoints(const std::string &filename,
-                             const std::vector<Point3D> &points) {
+                             const Point3DArray &points) {
   std::ofstream output(filename);
 
   if (!output.is_open()) {
@@ -87,7 +87,7 @@ void DataWriter::writePoint(std::ostream &output, const Point3D &point) {
 }
 
 void DataWriter::writePointRange(std::ostream &output,
-                                 const std::vector<Point3D> &points) {
+                                 const Point3DArray &points) {
   for (const Point3D &point : points) {
     writePoint(output, point);
   }
