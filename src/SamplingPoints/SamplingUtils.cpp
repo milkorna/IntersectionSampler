@@ -40,19 +40,18 @@ bool isInRange(const double value, const double minValue,
 
 std::vector<double> solveTrigonometricEquation(const double a, const double b,
                                                const double c) {
-  std::vector<double> angles;
 
   const double amplitude = std::sqrt(b * b + c * c);
 
   if (amplitude < constants::ComputationTolerance) {
-    return angles;
+    return {};
   }
 
   const double value = -a / amplitude;
 
   if (value < -1.0 - constants::ComputationTolerance ||
       value > 1.0 + constants::ComputationTolerance) {
-    return angles;
+    return {};
   }
 
   const double clampedValue = std::clamp(value, -1.0, 1.0);
@@ -60,6 +59,7 @@ std::vector<double> solveTrigonometricEquation(const double a, const double b,
   const double phase = std::atan2(c, b);
   const double delta = std::acos(clampedValue);
 
+  std::vector<double> angles;
   angles.push_back(phase + delta);
 
   const bool hasSecondSolution =
