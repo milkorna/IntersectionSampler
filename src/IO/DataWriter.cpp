@@ -37,7 +37,7 @@ void DataWriter::writePlaneSample(const PlaneSample &sample) const {
   writePointRange(output, sample.points);
 }
 
-void DataWriter::writeConeSample(const ConeSample &sample) const {
+void DataWriter::writeShapeSample(const ConeSample &sample) const {
   std::ofstream output = openOutputFile(m_coneShapePointsFilename);
 
   writeSectionHeader(output, "axis");
@@ -60,7 +60,7 @@ void DataWriter::writeConeSample(const ConeSample &sample) const {
   writePointRange(output, sample.generatrixPoints);
 }
 
-void DataWriter::writeCylinderSample(const CylinderSample &sample) const {
+void DataWriter::writeShapeSample(const CylinderSample &sample) const {
   std::ofstream output = openOutputFile(m_cylinderShapePointsFilename);
 
   writeSectionHeader(output, "axis");

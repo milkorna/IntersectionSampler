@@ -17,9 +17,9 @@ public:
 
   void writePlaneSample(const PlaneSample &sample) const;
 
-  void writeConeSample(const ConeSample &sample) const;
+  void writeShapeSample(const ConeSample &sample) const;
 
-  void writeCylinderSample(const CylinderSample &sample) const;
+  void writeShapeSample(const CylinderSample &sample) const;
 
 private:
   std::ofstream openOutputFile(const std::string &filename) const;
