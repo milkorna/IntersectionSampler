@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <ostream>
 #include <string>
-#include <vector>
 
 #include "Common/Point3D.h"
 #include "SamplingPoints/PlanePointSampler.h"

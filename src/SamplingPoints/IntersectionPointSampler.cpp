@@ -1,14 +1,13 @@
 #include "IntersectionPointSampler.h"
 
+#include <algorithm>
+#include <cmath>
+#include <utility>
+
 #include "Common/AppError.h"
 #include "Common/Constants.h"
 #include "Common/ErrorCode.h"
 #include "SamplingUtils.h"
-
-#include <algorithm>
-#include <cmath>
-#include <stdexcept>
-#include <utility>
 
 namespace {
 

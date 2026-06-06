@@ -1,7 +1,6 @@
 #include "DataReader.h"
 
 #include <fstream>
-#include <stdexcept>
 #include <utility>
 
 #include "Common/AppError.h"

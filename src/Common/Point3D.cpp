@@ -1,4 +1,5 @@
 #include "Point3D.h"
+
 #include "Vector3D.h"
 
 Point3D::Point3D(double xVal, double yVal, double zVal)

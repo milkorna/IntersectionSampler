@@ -1,7 +1,6 @@
 #include "Vector3D.h"
 
-#include <stdexcept>
-
+#include "Common/AppError.h"
 #include "Constants.h"
 #include "Direction3D.h"
 #include "Point3D.h"
@@ -45,7 +44,7 @@ Vector3D Vector3D::operator*(double scalar) const {
 
 Vector3D Vector3D::operator/(double scalar) const {
   if (std::abs(scalar) < constants::MinLength) {
-    throw std::invalid_argument("Division by zero.");
+    throw AppError(ErrorCode::InvalidArguments, "Division by zero.");
   }
 
   return Vector3D{m_x / scalar, m_y / scalar, m_z / scalar};
@@ -59,7 +58,8 @@ Vector3D Vector3D::normalized() const {
   const double length = getLength();
 
   if (length < constants::MinLength) {
-    throw std::invalid_argument("Cannot normalize zero-length vector.");
+    throw AppError(ErrorCode::InvalidGeometry,
+                   "Cannot normalize zero-length vector.");
   }
 
   return Vector3D{m_x / length, m_y / length, m_z / length};
