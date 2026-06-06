@@ -2,7 +2,3 @@ build/
 .vscode/
 .vs/
 
-intersection_points.txt
-plane_points.txt
-shape_cone_points.txt
-shape_cylinder_points.txt

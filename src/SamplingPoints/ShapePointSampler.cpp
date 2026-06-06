@@ -7,8 +7,8 @@
 
 namespace {
 
-constexpr size_t basePointCount = 47;
-constexpr size_t generatrixPointCount = 47;
+constexpr size_t basePointCount = 45;
+constexpr size_t generatrixPointCount = 45;
 
 Point3DArray sampleCircle(const Point3D &center,
                           const Direction3D &axisDirection, double radius,
