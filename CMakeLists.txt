@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(IntersectionSampler
     src/main.cpp
+    
     src/SamplingPipeline.cpp
     src/Status.cpp
 

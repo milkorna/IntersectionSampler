@@ -15,7 +15,7 @@ public:
   virtual Point3DArray sample() const = 0;
 
 protected:
-  static constexpr std::size_t m_intersectionPointCount = 100;
+  static constexpr size_t m_intersectionPointCount = 100;
 };
 
 class ConeIntersectionSampler final : public IIntersectionSampler {

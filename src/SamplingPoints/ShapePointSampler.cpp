@@ -7,12 +7,12 @@
 
 namespace {
 
-constexpr std::size_t basePointCount = 47;
-constexpr std::size_t generatrixPointCount = 47;
+constexpr size_t basePointCount = 47;
+constexpr size_t generatrixPointCount = 47;
 
 Point3DArray sampleCircle(const Point3D &center,
                           const Direction3D &axisDirection, double radius,
-                          std::size_t pointCount) {
+                          size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
@@ -23,7 +23,7 @@ Point3DArray sampleCircle(const Point3D &center,
   const Direction3D xDirection = sampling_utils::perpendicular(axisDirection);
   const Direction3D yDirection = axisDirection.cross(xDirection);
 
-  for (std::size_t i = 0; i < pointCount; ++i) {
+  for (size_t i = 0; i < pointCount; ++i) {
     const double theta = 2.0 * constants::Pi * static_cast<double>(i) /
                          static_cast<double>(pointCount);
 
@@ -37,7 +37,7 @@ Point3DArray sampleCircle(const Point3D &center,
 }
 
 Point3DArray sampleSegment(const Point3D &start, const Point3D &end,
-                           std::size_t pointCount) {
+                           size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
@@ -51,7 +51,7 @@ Point3DArray sampleSegment(const Point3D &start, const Point3D &end,
 
   const Vector3D offset{start, end};
 
-  for (std::size_t i = 0; i < pointCount; ++i) {
+  for (size_t i = 0; i < pointCount; ++i) {
     const double t =
         static_cast<double>(i) / static_cast<double>(pointCount - 1);
 
