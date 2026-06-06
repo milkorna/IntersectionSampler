@@ -2,7 +2,7 @@
 
 #include "Vector3D.h"
 
-Point3D::Point3D(double xVal, double yVal, double zVal)
+Point3D::Point3D(const double xVal, const double yVal, const double zVal)
     : m_x(xVal), m_y(yVal), m_z(zVal) {
 }
 
