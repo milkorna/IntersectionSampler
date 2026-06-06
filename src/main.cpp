@@ -72,6 +72,7 @@ int main(int argc, char *argv[]) {
 
     const DataReader reader(inputFile.string());
     const InputData data = reader.getData();
+    const DataWriter writer(outputDir);
 
     printInfo(data);
 
@@ -79,10 +80,7 @@ int main(int argc, char *argv[]) {
 
     const PlanePointSampler planeSampler(plane);
     const PlaneSample planeSample = planeSampler.sample();
-
-    const auto planeOutputFile = outputDir / "plane_points.txt";
-
-    DataWriter::writePlaneSample(planeOutputFile.string(), planeSample);
+    writer.writePlaneSample(planeSample);
 
     switch (data.shape.type) {
     case ShapeType::Cone: {
@@ -90,10 +88,7 @@ int main(int argc, char *argv[]) {
 
       const ConePointSampler shapeSampler(cone);
       const ConeSample coneSample = shapeSampler.sample();
-
-      const auto outputFile = outputDir / "shape_cone_points.txt";
-
-      DataWriter::writeConeSample(outputFile.string(), coneSample);
+      writer.writeConeSample(coneSample);
       break;
     }
     case ShapeType::Cylinder: {
@@ -101,10 +96,7 @@ int main(int argc, char *argv[]) {
 
       const CylinderPointSampler shapeSampler(cylinder);
       const CylinderSample cylinderSample = shapeSampler.sample();
-
-      const auto outputFile = outputDir / "shape_cylinder_points.txt";
-
-      DataWriter::writeCylinderSample(outputFile.string(), cylinderSample);
+      writer.writeCylinderSample(cylinderSample);
       break;
     }
     }
@@ -113,11 +105,7 @@ int main(int argc, char *argv[]) {
         IntersectionPointSamplerFactory::create(plane, data.shape));
 
     const auto intersectionPoints = intersectionSampler.sample();
-
-    const auto intersectionOutputFile = outputDir / "intersection_points.txt";
-
-    DataWriter::writeIntersectionPoints(intersectionOutputFile.string(),
-                                        intersectionPoints);
+    writer.writeIntersectionPoints(intersectionPoints);
 
     std::cout << "\nOutput files directory: " << outputDir << '\n';
     std::cout << "Intersection points sample count: "

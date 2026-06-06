@@ -3,24 +3,30 @@
 #include <fstream>
 #include <stdexcept>
 
-void DataWriter::writeIntersectionPoints(const std::string &filename,
-                                         const Point3DArray &points) {
-  std::ofstream output(filename);
+const std::string DataWriter::m_planePointsFilename = "plane_points.txt";
 
-  if (!output.is_open()) {
-    throw std::runtime_error("Failed to open output file: " + filename);
-  }
+const std::string DataWriter::m_intersectionPointsFilename =
+    "intersection_points.txt";
+
+const std::string DataWriter::m_coneShapePointsFilename =
+    "shape_cone_points.txt";
+
+const std::string DataWriter::m_cylinderShapePointsFilename =
+    "shape_cylinder_points.txt";
+
+DataWriter::DataWriter(std::filesystem::path outputDirectory)
+    : m_outputDirectory(std::move(outputDirectory)) {
+  std::filesystem::create_directories(m_outputDirectory);
+}
+
+void DataWriter::writeIntersectionPoints(const Point3DArray &points) const {
+  std::ofstream output = openOutputFile(m_intersectionPointsFilename);
 
   writePointRange(output, points);
 }
 
-void DataWriter::writePlaneSample(const std::string &filename,
-                                  const PlaneSample &sample) {
-  std::ofstream output(filename);
-
-  if (!output.is_open()) {
-    throw std::runtime_error("Failed to open output file: " + filename);
-  }
+void DataWriter::writePlaneSample(const PlaneSample &sample) const {
+  std::ofstream output = openOutputFile(m_planePointsFilename);
 
   writeSectionHeader(output, "origin");
   writePoint(output, sample.origin);
@@ -31,13 +37,8 @@ void DataWriter::writePlaneSample(const std::string &filename,
   writePointRange(output, sample.points);
 }
 
-void DataWriter::writeConeSample(const std::string &filename,
-                                 const ConeSample &sample) {
-  std::ofstream output(filename);
-
-  if (!output.is_open()) {
-    throw std::runtime_error("Failed to open output file: " + filename);
-  }
+void DataWriter::writeConeSample(const ConeSample &sample) const {
+  std::ofstream output = openOutputFile(m_coneShapePointsFilename);
 
   writeSectionHeader(output, "axis");
   writePoint(output, sample.axis.first);
@@ -59,13 +60,8 @@ void DataWriter::writeConeSample(const std::string &filename,
   writePointRange(output, sample.generatrixPoints);
 }
 
-void DataWriter::writeCylinderSample(const std::string &filename,
-                                     const CylinderSample &sample) {
-  std::ofstream output(filename);
-
-  if (!output.is_open()) {
-    throw std::runtime_error("Failed to open output file: " + filename);
-  }
+void DataWriter::writeCylinderSample(const CylinderSample &sample) const {
+  std::ofstream output = openOutputFile(m_cylinderShapePointsFilename);
 
   writeSectionHeader(output, "axis");
   writePoint(output, sample.axis.first);
@@ -80,6 +76,19 @@ void DataWriter::writeCylinderSample(const std::string &filename,
 
   writeSectionHeader(output, "top_base");
   writePointRange(output, sample.topBasePoints);
+}
+
+std::ofstream DataWriter::openOutputFile(const std::string &filename) const {
+  const std::filesystem::path outputFile = m_outputDirectory / filename;
+
+  std::ofstream output(outputFile);
+
+  if (!output.is_open()) {
+    throw std::runtime_error("Failed to open output file: " +
+                             outputFile.string());
+  }
+
+  return output;
 }
 
 void DataWriter::writePoint(std::ostream &output, const Point3D &point) {

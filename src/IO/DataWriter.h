@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -10,23 +11,31 @@
 
 class DataWriter {
 public:
-  static void writeIntersectionPoints(const std::string &filename,
-                                      const Point3DArray &points);
+  explicit DataWriter(std::filesystem::path outputDirectory);
 
-  static void writePlaneSample(const std::string &filename,
-                               const PlaneSample &sample);
+  void writeIntersectionPoints(const Point3DArray &points) const;
 
-  static void writeConeSample(const std::string &filename,
-                              const ConeSample &sample);
+  void writePlaneSample(const PlaneSample &sample) const;
 
-  static void writeCylinderSample(const std::string &filename,
-                                  const CylinderSample &sample);
+  void writeConeSample(const ConeSample &sample) const;
+
+  void writeCylinderSample(const CylinderSample &sample) const;
 
 private:
+  std::ofstream openOutputFile(const std::string &filename) const;
+
   static void writePoint(std::ostream &output, const Point3D &point);
 
   static void writePointRange(std::ostream &output, const Point3DArray &points);
 
   static void writeSectionHeader(std::ostream &output,
                                  const std::string &sectionName);
+
+private:
+  static const std::string m_planePointsFilename;
+  static const std::string m_intersectionPointsFilename;
+  static const std::string m_coneShapePointsFilename;
+  static const std::string m_cylinderShapePointsFilename;
+
+  std::filesystem::path m_outputDirectory;
 };
