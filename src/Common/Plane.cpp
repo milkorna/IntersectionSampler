@@ -9,7 +9,6 @@
 #include "Vector3D.h"
 
 Plane::Plane(const PlaneInputData &inputData) {
-
   const Vector3D firstDir{inputData.secondPoint, inputData.firstPoint};
   const Vector3D secondDir{inputData.thirdPoint, inputData.firstPoint};
   const Vector3D normalVector = firstDir.cross(secondDir);
@@ -19,15 +18,15 @@ Plane::Plane(const PlaneInputData &inputData) {
                    "Failed to create Plane: input points are collinear.");
   }
 
-  origin = inputData.firstPoint;
-  normal = Direction3D{normalVector};
-  refDir = Direction3D{firstDir};
+  m_origin = inputData.firstPoint;
+  m_normal = Direction3D{normalVector};
+  m_refDir = Direction3D{firstDir};
 }
 
 Plane::Plane(const Point3D &originVal, const Direction3D &normalVal,
              const Direction3D &refDirVal)
-    : origin(originVal), normal(normalVal), refDir(refDirVal) {
-  if (std::abs(normal.dot(refDir)) > constants::ComputationTolerance) {
+    : m_origin(originVal), m_normal(normalVal), m_refDir(refDirVal) {
+  if (std::abs(m_normal.dot(m_refDir)) > constants::ComputationTolerance) {
     throw AppError(
         ErrorCode::InvalidGeometry,
         "Failed to create Plane: normal and refDir are not perpendicular.");
@@ -35,13 +34,13 @@ Plane::Plane(const Point3D &originVal, const Direction3D &normalVal,
 }
 
 Point3D Plane::getOrigin() const {
-  return origin;
+  return m_origin;
 }
 
 Direction3D Plane::getNormal() const {
-  return normal;
+  return m_normal;
 }
 
 Direction3D Plane::getRefDir() const {
-  return refDir;
+  return m_refDir;
 }

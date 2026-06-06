@@ -14,7 +14,7 @@ public:
   double getRadius() const;
 
 private:
-  Point3D baseCenter;
-  Point3D apex;
-  double radius{0.0};
+  Point3D m_baseCenter;
+  Point3D m_apex;
+  double m_radius{0.0};
 };

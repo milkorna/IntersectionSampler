@@ -7,24 +7,24 @@
 #include "Point3D.h"
 
 Vector3D::Vector3D(double xVal, double yVal, double zVal)
-    : x(xVal), y(yVal), z(zVal) {
+    : m_x(xVal), m_y(yVal), m_z(zVal) {
 }
 
 Vector3D::Vector3D(const Point3D &from, const Point3D &to)
-    : x(to.getX() - from.getX()), y(to.getY() - from.getY()),
-      z(to.getZ() - from.getZ()) {
+    : m_x(to.getX() - from.getX()), m_y(to.getY() - from.getY()),
+      m_z(to.getZ() - from.getZ()) {
 }
 
 double Vector3D::getX() const {
-  return x;
+  return m_x;
 }
 
 double Vector3D::getY() const {
-  return y;
+  return m_y;
 }
 
 double Vector3D::getZ() const {
-  return z;
+  return m_z;
 }
 
 bool Vector3D::isZero(double tolerance) const {
@@ -32,15 +32,15 @@ bool Vector3D::isZero(double tolerance) const {
 }
 
 Vector3D Vector3D::operator+(const Vector3D &other) const {
-  return Vector3D{x + other.x, y + other.y, z + other.z};
+  return Vector3D{m_x + other.m_x, m_y + other.m_y, m_z + other.m_z};
 }
 
 Vector3D Vector3D::operator-(const Vector3D &other) const {
-  return Vector3D{x - other.x, y - other.y, z - other.z};
+  return Vector3D{m_x - other.m_x, m_y - other.m_y, m_z - other.m_z};
 }
 
 Vector3D Vector3D::operator*(double scalar) const {
-  return Vector3D{x * scalar, y * scalar, z * scalar};
+  return Vector3D{m_x * scalar, m_y * scalar, m_z * scalar};
 }
 
 Vector3D Vector3D::operator/(double scalar) const {
@@ -48,11 +48,11 @@ Vector3D Vector3D::operator/(double scalar) const {
     throw std::invalid_argument("Division by zero.");
   }
 
-  return Vector3D{x / scalar, y / scalar, z / scalar};
+  return Vector3D{m_x / scalar, m_y / scalar, m_z / scalar};
 }
 
 double Vector3D::getLength() const {
-  return std::sqrt(x * x + y * y + z * z);
+  return std::sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
 }
 
 Vector3D Vector3D::normalized() const {
@@ -62,18 +62,19 @@ Vector3D Vector3D::normalized() const {
     throw std::invalid_argument("Cannot normalize zero-length vector.");
   }
 
-  return Vector3D{x / length, y / length, z / length};
+  return Vector3D{m_x / length, m_y / length, m_z / length};
 }
 
 double Vector3D::dot(const Vector3D &other) const {
-  return x * other.x + y * other.y + z * other.z;
+  return m_x * other.m_x + m_y * other.m_y + m_z * other.m_z;
 }
 
 double Vector3D::dot(const Direction3D &other) const {
-  return x * other.getX() + y * other.getY() + z * other.getZ();
+  return m_x * other.getX() + m_y * other.getY() + m_z * other.getZ();
 }
 
 Vector3D Vector3D::cross(const Vector3D &other) const {
-  return Vector3D{y * other.z - z * other.y, z * other.x - x * other.z,
-                  x * other.y - y * other.x};
+  return Vector3D{m_y * other.m_z - m_z * other.m_y,
+                  m_z * other.m_x - m_x * other.m_z,
+                  m_x * other.m_y - m_y * other.m_x};
 }

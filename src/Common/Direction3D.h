@@ -24,7 +24,7 @@ private:
   void normalize(const double xVal, const double yVal, const double zVal);
 
 private:
-  double x{1.0};
-  double y{0.0};
-  double z{0.0};
+  double m_x{1.0};
+  double m_y{0.0};
+  double m_z{0.0};
 };

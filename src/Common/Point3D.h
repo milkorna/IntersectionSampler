@@ -19,9 +19,9 @@ public:
   Point3D translated(const Vector3D &offset) const;
 
 private:
-  double x{0.0};
-  double y{0.0};
-  double z{0.0};
+  double m_x{0.0};
+  double m_y{0.0};
+  double m_z{0.0};
 };
 
 using Point3DArray = std::vector<Point3D>;

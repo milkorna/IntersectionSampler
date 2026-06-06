@@ -16,26 +16,26 @@ Cone::Cone(const ShapeInputData &inputData)
 
 Cone::Cone(const Point3D &baseCenterVal, const Point3D &apexVal,
            const double radiusVal)
-    : baseCenter(baseCenterVal), apex(apexVal), radius(radiusVal) {
+    : m_baseCenter(baseCenterVal), m_apex(apexVal), m_radius(radiusVal) {
 
-  if (radius <= constants::MinLength) {
+  if (m_radius <= constants::MinLength) {
     throw AppError(ErrorCode::InvalidGeometry, "Radius is too small.");
   }
 
-  if (baseCenter.isEqual(apex, constants::PointTolerance)) {
+  if (m_baseCenter.isEqual(m_apex, constants::PointTolerance)) {
     throw AppError(ErrorCode::InvalidGeometry,
                    "Failed to create Cone: base center and apex are equal.");
   }
 }
 
 Point3D Cone::getBaseCenter() const {
-  return baseCenter;
+  return m_baseCenter;
 }
 
 Point3D Cone::getApex() const {
-  return apex;
+  return m_apex;
 }
 
 double Cone::getRadius() const {
-  return radius;
+  return m_radius;
 }

@@ -15,26 +15,27 @@ Cylinder::Cylinder(const ShapeInputData &inputData)
 
 Cylinder::Cylinder(const Point3D &firstBaseCenterVal,
                    const Point3D &secondBaseCenterVal, const double radiusVal)
-    : firstBaseCenter(firstBaseCenterVal),
-      secondBaseCenter(secondBaseCenterVal), radius(radiusVal) {
-  if (radius <= constants::MinLength) {
+    : m_firstBaseCenter(firstBaseCenterVal),
+      m_secondBaseCenter(secondBaseCenterVal), m_radius(radiusVal) {
+  if (m_radius <= constants::MinLength) {
     throw AppError(ErrorCode::InvalidGeometry, "Radius is too small.");
   }
 
-  if (firstBaseCenter.isEqual(secondBaseCenter, constants::PointTolerance)) {
+  if (m_firstBaseCenter.isEqual(m_secondBaseCenter,
+                                constants::PointTolerance)) {
     throw AppError(ErrorCode::InvalidGeometry,
                    "Failed to create Cylinder: base centers are equal.");
   }
 }
 
 Point3D Cylinder::getFirstBaseCenter() const {
-  return firstBaseCenter;
+  return m_firstBaseCenter;
 }
 
 Point3D Cylinder::getSecondBaseCenter() const {
-  return secondBaseCenter;
+  return m_secondBaseCenter;
 }
 
 double Cylinder::getRadius() const {
-  return radius;
+  return m_radius;
 }

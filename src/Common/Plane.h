@@ -18,7 +18,7 @@ public:
   Direction3D getRefDir() const;
 
 private:
-  Point3D origin;
-  Direction3D normal;
-  Direction3D refDir;
+  Point3D m_origin;
+  Direction3D m_normal;
+  Direction3D m_refDir;
 };
