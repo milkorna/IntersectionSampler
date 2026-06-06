@@ -1,9 +1,9 @@
 #include "SamplingPipeline.h"
 
 #include <iostream>
-#include <stdexcept>
 #include <utility>
 
+#include "Common/AppError.h"
 #include "Common/Cone.h"
 #include "Common/Cylinder.h"
 #include "IO/DataReader.h"
@@ -18,21 +18,30 @@ SamplingPipeline::SamplingPipeline(std::filesystem::path inputFile,
       m_outputDirectory(std::move(outputDirectory)) {
 }
 
-void SamplingPipeline::run() const {
-  const DataReader reader(m_inputFile.string());
-  const InputData data = reader.getData();
+Status SamplingPipeline::run() const {
+  try {
+    const DataReader reader(m_inputFile.string());
+    const InputData data = reader.getData();
 
-  const DataWriter writer(m_outputDirectory);
+    const DataWriter writer(m_outputDirectory);
 
-  printInfo(data);
+    printInfo(data);
 
-  const Plane plane(data.plane);
+    const Plane plane(data.plane);
 
-  writePlaneSample(plane, writer);
-  writeShapeSample(data.shape, writer);
-  writeIntersectionSample(plane, data.shape, writer);
+    writePlaneSample(plane, writer);
+    writeShapeSample(data.shape, writer);
+    writeIntersectionSample(plane, data.shape, writer);
 
-  std::cout << "\nOutput files directory: " << m_outputDirectory << '\n';
+    std::cout << "\nOutput files directory: " << m_outputDirectory << '\n';
+
+    return Status::ok();
+
+  } catch (const AppError &error) {
+    return Status::error(error.getCode(), error.what());
+  } catch (const std::exception &error) {
+    return Status::error(ErrorCode::UnknownError, error.what());
+  }
 }
 
 void SamplingPipeline::writePlaneSample(const Plane &plane,
@@ -67,7 +76,7 @@ void SamplingPipeline::writeShapeSample(const ShapeInputData &shapeData,
   }
   }
 
-  throw std::runtime_error("Unsupported shape type.");
+  throw AppError(ErrorCode::InvalidArguments, "Unsupported shape type.");
 }
 
 void SamplingPipeline::writeIntersectionSample(const Plane &plane,

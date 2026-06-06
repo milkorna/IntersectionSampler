@@ -1,7 +1,7 @@
 #include "PlanePointSampler.h"
 
-#include <stdexcept>
-
+#include "Common/AppError.h"
+#include "Common/ErrorCode.h"
 #include "Common/Vector3D.h"
 #include "IO/InputData.h"
 
@@ -10,7 +10,8 @@ PlanePointSampler::PlanePointSampler(const Plane &plane) : m_plane(plane) {
 
 PlaneSample PlanePointSampler::sample() const {
   if (m_gridSize < 2) {
-    throw std::runtime_error("Plane grid size must be at least 2.");
+    throw AppError(ErrorCode::InvalidArguments,
+                   "Plane grid size must be at least 2.");
   }
 
   PlaneSample sample;

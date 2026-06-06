@@ -7,13 +7,14 @@
 #include "Common/Point3D.h"
 #include "IO/DataWriter.h"
 #include "IO/InputData.h"
+#include "Status.h"
 
 class SamplingPipeline {
 public:
   SamplingPipeline(std::filesystem::path inputFile,
                    std::filesystem::path outputDirectory);
 
-  void run() const;
+  Status run() const;
 
 private:
   void writePlaneSample(const Plane &plane, const DataWriter &writer) const;

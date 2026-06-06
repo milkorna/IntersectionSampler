@@ -2,9 +2,10 @@
 
 #include <algorithm>
 #include <cmath>
-#include <stdexcept>
 
+#include "Common/AppError.h"
 #include "Common/Constants.h"
+#include "Common/ErrorCode.h"
 
 namespace sampling_utils {
 
@@ -19,7 +20,8 @@ Direction3D perpendicular(const Direction3D &axisDirection) {
   }
 
   if (candidate.getLength() < constants::MinLength) {
-    throw std::runtime_error("Failed to build perpendicular direction.");
+    throw AppError(ErrorCode::InvalidGeometry,
+                   "Failed to build perpendicular direction.");
   }
 
   return Direction3D{candidate};
@@ -74,17 +76,15 @@ std::vector<double> solveTrigonometricEquation(const double a, const double b,
 Point3DArray sampleFiniteLine(const Point3D &startPoint,
                               const Vector3D &direction, const double length,
                               const size_t pointCount) {
-  Point3DArray points;
-
   if (pointCount == 0) {
-    return points;
+    return {};
   }
 
   if (pointCount == 1) {
-    points.push_back(startPoint);
-    return points;
+    return {startPoint};
   }
 
+  Point3DArray points;
   points.reserve(pointCount);
 
   for (size_t i = 0; i < pointCount; ++i) {

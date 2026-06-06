@@ -1,6 +1,8 @@
 #include "IntersectionPointSampler.h"
 
+#include "Common/AppError.h"
 #include "Common/Constants.h"
+#include "Common/ErrorCode.h"
 #include "SamplingUtils.h"
 
 #include <algorithm>
@@ -18,8 +20,8 @@ public:
     m_height = axis.getLength();
 
     if (m_height < constants::MinLength) {
-      throw std::runtime_error(
-          "Failed to create revolution frame: zero height.");
+      throw AppError(ErrorCode::InvalidGeometry,
+                     "Failed to create revolution frame: zero height.");
     }
 
     m_axisDirection = Direction3D{axis};
@@ -293,7 +295,8 @@ IntersectionPointSampler::IntersectionPointSampler(
     std::unique_ptr<IIntersectionSampler> sampler)
     : m_sampler(std::move(sampler)) {
   if (!m_sampler) {
-    throw std::invalid_argument("Intersection sampler must not be null.");
+    throw AppError(ErrorCode::InvalidArguments,
+                   "Intersection sampler must not be null.");
   }
 }
 

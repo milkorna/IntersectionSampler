@@ -9,13 +9,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(IntersectionSampler
     src/main.cpp
     src/SamplingPipeline.cpp
+    src/Status.cpp
 
+    src/Common/AppError.cpp
     src/Common/Cone.cpp
     src/Common/Cylinder.cpp
     src/Common/Direction3D.cpp
     src/Common/Plane.cpp
     src/Common/Point3D.cpp
-    src/Common/ValidationUtils.cpp
     src/Common/Vector3D.cpp
 
     src/IO/DataReader.cpp

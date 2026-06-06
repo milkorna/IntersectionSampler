@@ -4,7 +4,9 @@
 #include <stdexcept>
 #include <utility>
 
+#include "Common/AppError.h"
 #include "Common/Constants.h"
+#include "Common/ErrorCode.h"
 #include "Common/Point3D.h"
 #include "InputData.h"
 
@@ -18,7 +20,8 @@ bool isInRange(const double value, const double minValue,
 void validateCoordinate(const double value, const std::string &name) {
   if (!isInRange(value, input_limits::MinCoordinate,
                  input_limits::MaxCoordinate)) {
-    throw std::runtime_error(name + " must be in range [-10.0, 10.0]");
+    throw AppError(ErrorCode::InvalidArguments,
+                   name + " must be in range [-10.0, 10.0]");
   }
 }
 
@@ -30,11 +33,12 @@ void validatePointCoordinates(const Point3D &point) {
 
 void validateRadius(const double radius) {
   if (!isInRange(radius, input_limits::MinRadius, input_limits::MaxRadius)) {
-    throw std::runtime_error("Radius must be in range [0.0, 5.0]");
+    throw AppError(ErrorCode::InvalidArguments,
+                   "Radius must be in range [0.0, 5.0]");
   }
 
   if (radius <= constants::MinLength) {
-    throw std::runtime_error("Radius is too small");
+    throw AppError(ErrorCode::InvalidArguments, "Radius is too small");
   }
 }
 
@@ -47,7 +51,8 @@ InputData DataReader::getData() const {
   std::ifstream input(m_filename);
 
   if (!input.is_open()) {
-    throw std::runtime_error("Failed to open file: " + m_filename);
+    throw AppError(ErrorCode::FailedToOpenFile,
+                   "Failed to open file: " + m_filename);
   }
 
   InputData data;
@@ -63,7 +68,8 @@ Point3D DataReader::getPoint(std::istream &input) const {
   double z = 0.0;
 
   if (!(input >> x >> y >> z)) {
-    throw std::runtime_error("Failed to read point coordinates.");
+    throw AppError(ErrorCode::FailedToReadInputData,
+                   "Failed to read point coordinates.");
   }
 
   const Point3D point{x, y, z};
@@ -76,11 +82,12 @@ PlaneInputData DataReader::getPlaneData(std::istream &input) const {
   std::string keyword;
 
   if (!(input >> keyword)) {
-    throw std::runtime_error("Failed to read plane keyword.");
+    throw AppError(ErrorCode::FailedToReadInputData,
+                   "Failed to read plane keyword.");
   }
 
   if (keyword != "plane") {
-    throw std::runtime_error("Expected keyword 'plane'.");
+    throw AppError(ErrorCode::InvalidArguments, "Expected keyword 'plane'.");
   }
 
   PlaneInputData planeData;
@@ -95,7 +102,8 @@ ShapeInputData DataReader::getShapeData(std::istream &input) const {
   std::string keyword;
 
   if (!(input >> keyword)) {
-    throw std::runtime_error("Failed to read shape keyword.");
+    throw AppError(ErrorCode::FailedToReadInputData,
+                   "Failed to read shape keyword.");
   }
 
   ShapeInputData shapeData;
@@ -105,14 +113,15 @@ ShapeInputData DataReader::getShapeData(std::istream &input) const {
   } else if (keyword == "cone") {
     shapeData.type = ShapeType::Cone;
   } else {
-    throw std::runtime_error("Expected keyword 'cylinder' or 'cone'.");
+    throw AppError(ErrorCode::InvalidArguments,
+                   "Expected keyword 'cylinder' or 'cone'.");
   }
 
   shapeData.firstPoint = getPoint(input);
   shapeData.secondPoint = getPoint(input);
 
   if (!(input >> shapeData.radius)) {
-    throw std::runtime_error("Failed to read radius.");
+    throw AppError(ErrorCode::FailedToReadInputData, "Failed to read radius.");
   }
 
   validateRadius(shapeData.radius);

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cstddef>
-#include <vector>
-
 #include "Common/Plane.h"
 #include "Common/Point3D.h"
 
@@ -20,5 +17,5 @@ public:
 private:
   Plane m_plane;
 
-  static constexpr std::size_t m_gridSize = 9;
+  static constexpr size_t m_gridSize = 9;
 };

@@ -1,22 +1,20 @@
-#include <exception>
 #include <iostream>
 
 #include "SamplingPipeline.h"
 
 int main(int argc, char *argv[]) {
-  try {
-    if (argc != 3) {
-      std::cerr << "Usage: " << argv[0] << " <input_file> <output_directory>\n";
-      return 1;
-    }
-
-    const SamplingPipeline application{argv[1], argv[2]};
-    application.run();
-
-  } catch (const std::exception &error) {
-    std::cerr << "Error: " << error.what() << '\n';
-    return 1;
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <input_file> <output_directory>\n";
+    return static_cast<int>(ErrorCode::InvalidArguments);
   }
 
-  return 0;
+  const SamplingPipeline pipeline{argv[1], argv[2]};
+  const Status status = pipeline.run();
+
+  if (!status.isOk()) {
+    std::cerr << "Error: " << status.getMessage() << '\n';
+    return static_cast<int>(status.getCode());
+  }
+
+  return static_cast<int>(ErrorCode::Ok);
 }

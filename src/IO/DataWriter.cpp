@@ -1,7 +1,9 @@
 #include "DataWriter.h"
 
 #include <fstream>
-#include <stdexcept>
+
+#include "Common/AppError.h"
+#include "Common/ErrorCode.h"
 
 const std::string DataWriter::m_planePointsFilename = "plane_points.txt";
 
@@ -84,8 +86,8 @@ std::ofstream DataWriter::openOutputFile(const std::string &filename) const {
   std::ofstream output(outputFile);
 
   if (!output.is_open()) {
-    throw std::runtime_error("Failed to open output file: " +
-                             outputFile.string());
+    throw AppError(ErrorCode::FailedToOpenFile,
+                   "Failed to open output file: " + outputFile.string());
   }
 
   return output;

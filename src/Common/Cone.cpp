@@ -1,25 +1,31 @@
-#include <stdexcept>
-
 #include "Cone.h"
-#include "Point3D.h"
-#include "ValidationUtils.h"
 
+#include "AppError.h"
+#include "Constants.h"
+#include "ErrorCode.h"
 #include "IO/InputData.h"
+#include "Point3D.h"
 
 Cone::Cone(const ShapeInputData &inputData)
     : Cone(inputData.firstPoint, inputData.secondPoint, inputData.radius) {
   if (inputData.type != ShapeType::Cone) {
-    throw std::invalid_argument("ShapeInputData type is not Cone.");
+    throw AppError(ErrorCode::ShapeTypeMismatch,
+                   "ShapeInputData type is not Cone.");
   }
 }
 
 Cone::Cone(const Point3D &baseCenterVal, const Point3D &apexVal,
            const double radiusVal)
     : baseCenter(baseCenterVal), apex(apexVal), radius(radiusVal) {
-  geometry_validation::validateRadius(radius);
-  geometry_validation::validateDifferentPoints(
-      baseCenter, apex,
-      "Failed to create Cone: base center and apex are equal.");
+
+  if (radius <= constants::MinLength) {
+    throw AppError(ErrorCode::InvalidGeometry, "Radius is too small.");
+  }
+
+  if (baseCenter.isEqual(apex, constants::PointTolerance)) {
+    throw AppError(ErrorCode::InvalidGeometry,
+                   "Failed to create Cone: base center and apex are equal.");
+  }
 }
 
 Point3D Cone::getBaseCenter() const {

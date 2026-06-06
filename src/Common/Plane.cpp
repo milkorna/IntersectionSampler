@@ -1,9 +1,9 @@
 #include "Plane.h"
 
-#include <stdexcept>
-
+#include "AppError.h"
 #include "Constants.h"
 #include "Direction3D.h"
+#include "ErrorCode.h"
 #include "IO/InputData.h"
 #include "Point3D.h"
 #include "Vector3D.h"
@@ -15,8 +15,8 @@ Plane::Plane(const PlaneInputData &inputData) {
   const Vector3D normalVector = firstDir.cross(secondDir);
 
   if (normalVector.getLength() < constants::MinLength) {
-    throw std::invalid_argument(
-        "Failed to create Plane: input points are collinear.");
+    throw AppError(ErrorCode::InvalidGeometry,
+                   "Failed to create Plane: input points are collinear.");
   }
 
   origin = inputData.firstPoint;
@@ -28,7 +28,8 @@ Plane::Plane(const Point3D &originVal, const Direction3D &normalVal,
              const Direction3D &refDirVal)
     : origin(originVal), normal(normalVal), refDir(refDirVal) {
   if (std::abs(normal.dot(refDir)) > constants::ComputationTolerance) {
-    throw std::invalid_argument(
+    throw AppError(
+        ErrorCode::InvalidGeometry,
         "Failed to create Plane: normal and refDir are not perpendicular.");
   }
 }

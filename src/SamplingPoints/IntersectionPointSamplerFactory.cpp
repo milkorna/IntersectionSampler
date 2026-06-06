@@ -1,19 +1,21 @@
 #include "IntersectionPointSamplerFactory.h"
 
-#include <stdexcept>
+#include "Common/AppError.h"
+#include "Common/ErrorCode.h"
 
 std::unique_ptr<IIntersectionSampler>
 IntersectionPointSamplerFactory::create(const Plane &plane,
                                         const ShapeInputData &shapeData) {
   switch (shapeData.type) {
-  case ShapeType::Cone:
+  case ShapeType::Cone: {
     return createConeIntersectionSampler(plane, shapeData);
-
-  case ShapeType::Cylinder:
+  }
+  case ShapeType::Cylinder: {
     return createCylinderIntersectionSampler(plane, shapeData);
   }
+  }
 
-  throw std::runtime_error("Unsupported shape type.");
+  throw AppError(ErrorCode::InvalidArguments, "Unsupported shape type.");
 }
 
 std::unique_ptr<IIntersectionSampler>

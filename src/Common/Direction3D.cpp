@@ -1,8 +1,8 @@
 #include "Direction3D.h"
 
-#include <stdexcept>
-
+#include "AppError.h"
 #include "Constants.h"
+#include "ErrorCode.h"
 #include "Vector3D.h"
 
 double Direction3D::getX() const {
@@ -34,8 +34,8 @@ void Direction3D::normalize(const double xVal, const double yVal,
   const double length = std::sqrt(xVal * xVal + yVal * yVal + zVal * zVal);
 
   if (length < constants::MinLength) {
-    throw std::invalid_argument(
-        "Failed to create Direction3D from zero-length vector.");
+    throw AppError(ErrorCode::InvalidGeometry,
+                   "Failed to create Direction3D from zero-length vector.");
   }
 
   x = xVal / length;
