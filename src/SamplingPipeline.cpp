@@ -22,10 +22,9 @@ Status SamplingPipeline::run() const {
   try {
     const DataReader reader(m_inputFile.string());
     const InputData data = reader.getData();
+    data.print(std::cout);
 
     const DataWriter writer(m_outputDirectory);
-
-    printInfo(data);
 
     const Plane plane(data.plane);
 
@@ -91,45 +90,4 @@ void SamplingPipeline::writeIntersectionSample(const Plane &plane,
 
   std::cout << "\nIntersection points sample count: "
             << intersectionPoints.size() << '\n';
-}
-
-std::string SamplingPipeline::shapeTypeToString(ShapeType type) {
-  switch (type) {
-  case ShapeType::Cylinder:
-    return "cylinder";
-
-  case ShapeType::Cone:
-    return "cone";
-  }
-
-  return "unknown";
-}
-
-void SamplingPipeline::printPoint(const Point3D &point) {
-  std::cout << '(' << point.getX() << ", " << point.getY() << ", "
-            << point.getZ() << ')';
-}
-
-void SamplingPipeline::printInfo(const InputData &data) {
-  std::cout << "Plane points:\n";
-  printPoint(data.plane.firstPoint);
-  std::cout << '\n';
-
-  printPoint(data.plane.secondPoint);
-  std::cout << '\n';
-
-  printPoint(data.plane.thirdPoint);
-  std::cout << "\n\n";
-
-  std::cout << "Shape type: " << shapeTypeToString(data.shape.type) << '\n';
-
-  std::cout << "First point: ";
-  printPoint(data.shape.firstPoint);
-  std::cout << '\n';
-
-  std::cout << "Second point: ";
-  printPoint(data.shape.secondPoint);
-  std::cout << '\n';
-
-  std::cout << "Radius: " << data.shape.radius << '\n';
 }

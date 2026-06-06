@@ -1,10 +1,8 @@
 #pragma once
 
 #include <filesystem>
-#include <string>
 
 #include "Common/Plane.h"
-#include "Common/Point3D.h"
 #include "IO/DataWriter.h"
 #include "IO/InputData.h"
 #include "Status.h"
@@ -25,10 +23,6 @@ private:
   void writeIntersectionSample(const Plane &plane,
                                const ShapeInputData &shapeData,
                                const DataWriter &writer) const;
-
-  static void printInfo(const InputData &data);
-  static void printPoint(const Point3D &point);
-  static std::string shapeTypeToString(ShapeType type);
 
 private:
   std::filesystem::path m_inputFile;

@@ -22,6 +22,7 @@ add_executable(IntersectionSampler
 
     src/IO/DataReader.cpp
     src/IO/DataWriter.cpp
+    src/IO/InputData.cpp
     
     src/SamplingPoints/IntersectionPointSampler.cpp
     src/SamplingPoints/IntersectionPointSamplerFactory.cpp
