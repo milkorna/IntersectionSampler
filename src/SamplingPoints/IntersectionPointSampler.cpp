@@ -56,10 +56,9 @@ private:
   double m_height{0.0};
 };
 
-std::vector<double>
-findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
-                                const Direction3D &planeNormal,
-                                const double radius) {
+std::vector<double> getConeGeneratrixAngles(const RevolutionFrame &frame,
+                                            const Direction3D &planeNormal,
+                                            const double radius) {
   const double k = radius / frame.getHeight();
 
   const double a = frame.getAxisDirection().dot(planeNormal);
@@ -69,16 +68,14 @@ findConeGeneratrixAnglesInPlane(const RevolutionFrame &frame,
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
 
-Point3DArray sampleConePlaneThroughApex(const RevolutionFrame &frame,
-                                        const Plane &plane, const double radius,
-                                        const size_t pointCount) {
+Point3DArray sampleConeApexSection(const RevolutionFrame &frame,
+                                   const Plane &plane, const double radius,
+                                   const size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
 
-  const std::vector<double> angles =
-      findConeGeneratrixAnglesInPlane(frame, plane.getNormal(), radius);
-
+  const auto angles = getConeGeneratrixAngles(frame, plane.getNormal(), radius);
   if (angles.empty()) {
     return {frame.getOrigin()};
   }
@@ -110,9 +107,9 @@ Point3DArray sampleConePlaneThroughApex(const RevolutionFrame &frame,
   return points;
 }
 
-std::vector<double>
-findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
-                                    const Plane &plane, const double radius) {
+std::vector<double> getCylinderGeneratrixAngles(const RevolutionFrame &frame,
+                                                const Plane &plane,
+                                                const double radius) {
   const double a =
       Vector3D{plane.getOrigin(), frame.getOrigin()}.dot(plane.getNormal());
 
@@ -122,15 +119,14 @@ findCylinderGeneratrixAnglesInPlane(const RevolutionFrame &frame,
   return sampling_utils::solveTrigonometricEquation(a, b, c);
 }
 
-Point3DArray sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
-                                               const Plane &plane,
-                                               const double radius,
-                                               const size_t pointCount) {
+Point3DArray sampleCylinderAxialSection(const RevolutionFrame &frame,
+                                        const Plane &plane, const double radius,
+                                        const size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
 
-  const auto angles = findCylinderGeneratrixAnglesInPlane(frame, plane, radius);
+  const auto angles = getCylinderGeneratrixAngles(frame, plane, radius);
 
   if (angles.empty()) {
     return {};
@@ -159,9 +155,10 @@ Point3DArray sampleCylinderPlaneParallelToAxis(const RevolutionFrame &frame,
   return points;
 }
 
-Point3DArray sampleCylinderByAngle(const RevolutionFrame &frame,
-                                   const Plane &plane, const double radius,
-                                   const size_t pointCount) {
+Point3DArray sampleCylinderRegularSection(const RevolutionFrame &frame,
+                                          const Plane &plane,
+                                          const double radius,
+                                          const size_t pointCount) {
   if (pointCount == 0) {
     return {};
   }
@@ -223,8 +220,8 @@ Point3DArray ConeIntersectionSampler::sample() const {
       Vector3D{m_plane.getOrigin(), apex}.dot(m_plane.getNormal());
 
   if (std::abs(numerator) < constants::ComputationTolerance) {
-    return sampleConePlaneThroughApex(frame, m_plane, radius,
-                                      m_intersectionPointCount);
+    return sampleConeApexSection(frame, m_plane, radius,
+                                 m_intersectionPointCount);
   }
 
   Point3DArray points;
@@ -282,12 +279,12 @@ Point3DArray CylinderIntersectionSampler::sample() const {
   const double denominator = frame.getAxisDirection().dot(m_plane.getNormal());
 
   if (std::abs(denominator) >= constants::ComputationTolerance) {
-    return sampleCylinderByAngle(frame, m_plane, radius,
-                                 m_intersectionPointCount);
+    return sampleCylinderRegularSection(frame, m_plane, radius,
+                                        m_intersectionPointCount);
   }
 
-  return sampleCylinderPlaneParallelToAxis(frame, m_plane, radius,
-                                           m_intersectionPointCount);
+  return sampleCylinderAxialSection(frame, m_plane, radius,
+                                    m_intersectionPointCount);
 }
 
 IntersectionPointSampler::IntersectionPointSampler(
