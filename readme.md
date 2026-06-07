@@ -101,8 +101,6 @@ File → Open → Folder...
 Build → Build All
 ```
 
-или выбрать target `IntersectionSampler.exe` и собрать его отдельно.
-
 Для запуска программы нужно указать аргументы командной строки:
 
 ```txt
