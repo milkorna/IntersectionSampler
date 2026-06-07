@@ -129,6 +129,13 @@ data.txt result
 }
 ```
 
+## Ручной запуск `.exe` в Windows
+
+Если нужно запустить собранный `.exe` напрямую, это можно сделать из корня проекта через PowerShell:
+
+```powershell
+.\out\build\x64-Debug\IntersectionSampler.exe data.txt result
+
 ## Визуализация
 
 Для отладки можно использовать Python-скрипт `plot_debug_scene.py`.
