@@ -135,6 +135,7 @@ data.txt result
 
 ```powershell
 .\out\build\x64-Debug\IntersectionSampler.exe data.txt result
+```
 
 ## Визуализация
 
